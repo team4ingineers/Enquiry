@@ -182,18 +182,24 @@
         </form>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const responseElement = document.getElementById("responseMessage");
-            if (responseElement) {
-                let responseText = responseElement.innerText;
+      document.addEventListener("DOMContentLoaded", function() {
+    const responseElement = document.getElementById("responseMessage");
+    if (responseElement) {
+        let responseText = responseElement.innerHTML; // Changed to innerHTML to include HTML elements
 
-                responseText = responseText.replace(/\\(.?)\\*/g, "<strong>$1</strong>");
-                responseText = responseText.replace(/(\d+\.\s.*?)(?=\d+\.\s|$)/gs, "<p>$1</p>");
-                responseText = responseText.replace(/(\\s.?)(?=\*\s|$)/gs, "<p>$1</p>");
-                
-                responseElement.innerHTML = responseText;
-            }
-        });
+        // Bold text between double asterisks
+        responseText = responseText.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        
+        // Paragraphs based on numbers followed by periods (e.g., 1. Some text)
+        responseText = responseText.replace(/(\d+\.\s.*?)(?=\d+\.\s|$)/gs, "<p>$1</p>");
+        
+        // Paragraphs for lines ending with asterisks
+        responseText = responseText.replace(/(.*?)(?=\*\s|$)/gs, "<p>$1</p>");
+
+        responseElement.innerHTML = responseText;
+    }
+});
+
     </script>
 </body>
 </html>
