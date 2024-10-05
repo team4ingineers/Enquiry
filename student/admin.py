@@ -14,3 +14,10 @@ class StudentProfileAdmin(admin.ModelAdmin):
 
 # Register Enquiry model
 admin.site.register(Enquiry)
+
+
+from django.contrib import admin
+from .models import CollegeHealthScore, StudentFeedback
+
+admin.site.register(CollegeHealthScore)
+admin.site.register(StudentFeedback)
