@@ -18,6 +18,8 @@ urlpatterns = [
     path('events/category/google_drive/folder/<str:folder_id>/', view_folder_contents, name='view_folder_contents'),
     path('studentactiveenquires/',studentactiveenquires, name='studentactiveenquires'),
     path('closedenquiry/',closedenquiry, name ='closedenquiry'),
+    path('enquiry/<int:id>/', enquiry_detail, name='enquiry_detail'),
+    path('enquiry/<int:id>/schedule-meeting/', schedule_meeting, name='schedule_meeting'),
     
 ]
 

@@ -386,3 +386,14 @@ def closedenquiry(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all() 
     return render(request, 'closedenquiry.html',{'enquiries': enquiries, 'user_type': 'Student'})
+
+
+def enquiry_detail(request, id):
+    enquiry = get_object_or_404(Enquiry, id=id)
+    return render(request, 'enquiry_detail.html', {'enquiry': enquiry})
+
+
+def schedule_meeting(request, id):
+    enquiry = get_object_or_404(Enquiry, id=id)
+    # Logic for scheduling a meeting goes here
+    return render(request, 'schedule_meeting.html', {'enquiry': enquiry})

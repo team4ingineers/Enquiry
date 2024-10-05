@@ -1,0 +1,26 @@
+<h1>Manage Meeting Request</h1>
+
+<div class="meeting-detail">
+    <p><strong>Meeting Date:</strong> {{ meeting.meeting_date }}</p>
+    <p><strong>Meeting Time:</strong> {{ meeting.meeting_time }}</p>
+    <p><strong>Description:</strong> {{ meeting.description|default:"No description provided" }}</p>
+    <p><strong>Status:</strong> {{ meeting.get_status_display }}</p>
+</div>
+
+<!-- Form for accepting or rejecting the meeting -->
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="accept" class="btn btn-success">Accept Meeting</button>
+    <button type="submit" name="reject" class="btn btn-danger">Reject Meeting</button>
+    <a href="{% url 'college_meetings' %}" class="btn btn-outline-secondary">Back to Meetings</a>
+</form>
+
+<!-- Optional: Add some styles -->
+<style>
+    .meeting-detail {
+        margin-bottom: 20px;
+    }
+    .btn {
+        margin-right: 10px;
+    }
+</style>
