@@ -228,7 +228,9 @@ def colleges(request):
 
 
 def enquires(request):
-    return render(request, 'enquires.html')
+    student = Student.objects.get(user=request.user)
+    enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
+    return render(request, 'student/student_dashboard.html', {'enquiries': enquiries, 'user_type': 'Student'})
 
 def airecommendation(request):
     return render(request, 'gemini.html')
