@@ -370,8 +370,19 @@ def view_folder_contents(request, folder_id):
 
 
 
+def studentactiveenquires(request):
+    return render(request, 'studentactiveenquires.html')
 
 
 
 
+def studentactiveenquires(request):
+    student = Student.objects.get(user=request.user)
+    enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
+    return render(request, 'studentactiveenquires.html', {'enquiries': enquiries, 'user_type': 'Student'})
 
+
+def closedenquiry(request):
+    student = Student.objects.get(user=request.user)
+    enquiries = student.enquiry_set.all() 
+    return render(request, 'closedenquiry.html',{'enquiries': enquiries, 'user_type': 'Student'})

@@ -1,19 +1,7 @@
 {% extends 'studentbase.html' %}
 
 {% block content %}
-  <h3>Your Enquiries</h3>
-  <ul>
-    {% for enquiry in enquiries %}
-      <li>
-        Enquiry to {{ enquiry.college.user.username }}: {{ enquiry.message }} <br>
-        Status: {{ enquiry.status }} <br>
-        Seen by College: {{ enquiry.seen_by_college }} <br>
-        Response: {{ enquiry.response|default:"No response yet" }}
-      </li>
-    {% empty %}
-      <li>You have not made any enquiries yet.</li>
-    {% endfor %}
-  </ul>
+ 
   
   <div class="head-title">
     <div class="left">
@@ -32,24 +20,24 @@
 </div>
 
 <ul class="box-info">
-    <li>
+    <li><a href="/student/send_enquiry/">
         <i class='bx bxs-calendar-check'></i>
         <span class="text">
-            
+        </a>
             <p>Enquire A College</p>
         </span>
     </li>
-    <li>
-        <i class='bx bxs-group'></i>
+    <li><a href="/student/studentactiveenquires/">
+        <i class='bx bxs-group'></i></a>
         <span class="text">
             <h3>60</h3>
             <p>Active enquires</p>
         </span>
     </li>
-    <li>
-        <i class='bx bxs-dollar-circle'></i>
+    <li><a href="/student/closedenquiry/">
+        <i class='bx bxs-dollar-circle'></i></a>
         <span class="text">
-            <h3>70%</h3>
+            <h3>70</h3>
             <p>Closed Enquires</p>
         </span>
     </li>
