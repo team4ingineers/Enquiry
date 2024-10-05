@@ -66,7 +66,6 @@ class StudentProfile(models.Model):
 
 
 
-<<<<<<< HEAD
 from django.db import models
 from college.models import College
 from django.contrib.auth.models import User
@@ -103,7 +102,6 @@ class StudentFeedback(models.Model):
             self.college_health_score.number_of_disagreements += 1
 
         self.college_health_score.update_health_score()
-=======
 class Meeting(models.Model):
     enquiry = models.ForeignKey('Enquiry', on_delete=models.CASCADE, related_name='meetings')
     meeting_date = models.DateField()
@@ -121,4 +119,3 @@ class Meeting(models.Model):
 
     def __str__(self):
         return f"Meeting for {self.enquiry} on {self.meeting_date} at {self.meeting_time}"
->>>>>>> 0c63b5542ab139f0365bbadcf5c556f072fb1f91
