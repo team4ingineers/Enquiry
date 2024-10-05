@@ -21,10 +21,10 @@
 <section id="sidebar">
     <a href="#" class="brand">
         <i class='bx bxs-smile'></i>
-        <span class="text">Mentor Connect</span>
+        <span class="text">College Flow</span>
     </a>
     <ul class="side-menu top">
-        <li class="{% if request.path == '/dashboard/' %}active{% endif %}">
+        <li class="{% if request.path == '/student/student_dashboard' %}active{% endif %}">
             <a href="/dashboard/">
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
@@ -34,7 +34,7 @@
         <li class="{% if '/student_detail/' in request.path %}active{% endif %}">
             <a href="/student_detail/">
                 <i class='bx bxs-group'></i>
-                <span class="text">Students Detail</span>
+                <span class="text">Colleges</span>
             </a>
         </li>
         
@@ -48,7 +48,7 @@
         <li class="{% if request.path == '/progress_report/' %}active{% endif %}">
             <a href="/progress_report/">
                 <i class='bx bxs-doughnut-chart'></i>
-                <span class="text">Progress Report</span>
+                <span class="text">Ai Helper </span>
             </a>
         </li>
         <li class="{% if request.path == '/tools/' %}active{% endif %}">

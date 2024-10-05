@@ -24,3 +24,15 @@ class Enquiry(models.Model):
 
     def __str__(self):
         return f"Enquiry from {self.student.user.username} to {self.college.user.username}"
+
+
+        
+        
+        
+class CollegeTour(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    image = models.ImageField(upload_to='tours/')
+
+    def __str__(self):
+        return self.name
