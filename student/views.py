@@ -54,7 +54,7 @@ class StudentLoginView(LoginView):
 def student_dashboard_view(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
-    return render(request, 'student/student_dashboard.html', {'enquiries': enquiries, 'user_type': 'Student'})
+    return render(request, 'student_dashboard.html', {'enquiries': enquiries, 'user_type': 'Student'})
 
 
 
@@ -217,6 +217,7 @@ def college_recommendation(request):
 
 from django.shortcuts import render, get_object_or_404
 from student.models import CollegeTour  # Import the CollegeTour model
+from college.models import *
 
 def college_tour(request, id):  # Ensure id is in the function definition
     tour = get_object_or_404(CollegeTour, id=id)
@@ -224,13 +225,14 @@ def college_tour(request, id):  # Ensure id is in the function definition
 
 
 def colleges(request):
-    return render(request, 'colleges.html')
+    all_colleges = College.objects.all()
+    return render(request, 'colleges.html', {'colleges': all_colleges})
 
 
 def enquires(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
-    return render(request, 'student/student_dashboard.html', {'enquiries': enquiries, 'user_type': 'Student'})
+    return render(request, 'student/student_enquires.html', {'enquiries': enquiries, 'user_type': 'Student'})
 
 def airecommendation(request):
     return render(request, 'gemini.html')

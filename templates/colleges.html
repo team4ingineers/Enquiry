@@ -1,4 +1,42 @@
 {% extends 'studentbase.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colleges</title>
+
+</head>
+<body>
+    <h1>List of Colleges</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Established</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for college in colleges %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ college.name }}</td>
+                <td>{{ college.location }}</td>
+                <td>{{ college.established }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No colleges available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
 
 {% block title %}Colleges{% endblock %}
 
