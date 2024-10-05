@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Recommendation AI</title>
+    <style>
+        .chat-container {
+            background: #fff;
+            width: 90%;
+            max-width: 800px;
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+            color: #4a4a4a;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .button1 {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .button1:hover {
+            background: #0056b3;
+        }
+
+        .response-container {
+            margin-top: 20px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .response-container .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            background: #f1f1f1;
+            color: #555;
+        }
+
+        .response-container .message strong {
+            color: #007bff;
+        }
+
+        .location-button {
+            margin-top: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 95%;
+                margin: 10px;
+            }
+
+            .button1 {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            textarea {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1><b>Engineering College Recommendation AI</b></h1>
+
+        <div class="response-container">
+            {% if response %}
+            <div id="responseMessage" class="message bot">
+                <p>{{ response }}</p>
+            </div>
+            {% else %}
+            <div class="message bot">
+                <p>No suggestions yet. Fill out the form to get recommendations!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <form method="POST" style="display: flex; flex-direction: column; margin-top: auto;">
+            {% csrf_token %}
+            <input type="text" id="student_name" name="student_name" placeholder="Your Name" required>
+            <input type="number" id="marks" name="marks" placeholder="Your Marks" required>
+            <input type="text" id="address" name="address" placeholder="Your Address" required>
+
+            <div id="location-inputs">
+                <input type="text" id="location" name="location" placeholder="Preferred Location" required>
+                <button class="button1 location-button" type="button" onclick="getLocation()">Use Current Location</button>
+            </div>
+
+            <input type="text" id="course" name="course" placeholder="Preferred Course" required>
+            <input type="number" id="budget" name="budget" placeholder="Budget for College" required>
+            <textarea id="special_requirements" name="special_requirements" placeholder="Any special requirements?"></textarea>
+
+            <button class="button1" type="submit">Get College Suggestions</button>
+        </form>
+    </div>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            const locationInput = document.getElementById("location");
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            // Set location as "lat, lon" to simulate usage
+            locationInput.value = `${lat}, ${lon}`;
+        }
+    </script>
+</body>
+</html>
