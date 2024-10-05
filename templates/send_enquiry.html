@@ -1,10 +1,96 @@
 {% extends 'studentbase.html' %}
 
 {% block content %}
-  <h2>Send Enquiry</h2>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Send Enquiry</button>
-  </form>
+<div class="enquiry-container">
+    <h2>Send Enquiry</h2>
+    <form method="POST" class="enquiry-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Send Enquiry</button>
+    </form>
+</div>
+
+<!-- Optional: Add CSS for styling -->
+<style>
+    .enquiry-container {
+        background-color: #ffffff; /* Changed to white for better contrast */
+        border: 1px solid #e0e0e0; /* Light gray border */
+        border-radius: 10px; /* Slightly more rounded corners */
+        padding: 30px; /* Padding around the container */
+        margin: 40px auto; /* Centering with auto margins */
+        max-width: 500px; /* Maximum width of the form */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    }
+
+    .enquiry-container h2 {
+        text-align: center;
+        margin-bottom: 20px; /* Space below the title */
+        color: #333; /* Dark text color */
+        font-size: 24px; /* Larger font size for the title */
+    }
+
+    .enquiry-form {
+        display: flex;
+        flex-direction: column; /* Stack fields vertically */
+    }
+
+    .enquiry-form p {
+        margin-bottom: 15px; /* Space between fields */
+        font-size: 16px; /* Font size for form fields */
+    }
+
+    .enquiry-form label {
+        font-weight: bold; /* Make labels bold */
+        margin-bottom: 5px; /* Space between label and field */
+    }
+
+    .enquiry-form input,
+    .enquiry-form textarea, /* Style input and textarea */
+    .enquiry-form select {
+        padding: 10px; /* Padding inside input fields */
+        border: 1px solid #ccc; /* Light border for fields */
+        border-radius: 5px; /* Rounded corners for fields */
+        font-size: 16px; /* Font size for fields */
+        margin-bottom: 15px; /* Space below input fields */
+        transition: border-color 0.3s; /* Smooth transition for border color */
+    }
+
+    .enquiry-form input:focus,
+    .enquiry-form textarea:focus, /* Change border color on focus */
+    .enquiry-form select:focus {
+        border-color: #007bff; /* Blue border on focus */
+        outline: none; /* Remove default outline */
+    }
+
+    .btn {
+        padding: 10px; /* Padding for button */
+        font-size: 16px; /* Font size for button */
+        border: none; /* Remove default border */
+        border-radius: 5px; /* Rounded corners for button */
+        cursor: pointer; /* Pointer cursor on hover */
+        transition: background-color 0.3s; /* Smooth transition for background */
+    }
+
+    .btn-primary {
+        background-color: #007bff; /* Primary button color */
+        color: white; /* Text color for button */
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .enquiry-container {
+            padding: 20px; /* Less padding on smaller screens */
+            margin: 20px; /* Less margin on smaller screens */
+            width: 90%; /* Full width on smaller screens */
+        }
+
+        .btn {
+            font-size: 14px; /* Smaller button text */
+        }
+    }
+</style>
 {% endblock %}

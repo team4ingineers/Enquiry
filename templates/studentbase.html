@@ -60,7 +60,7 @@
             </a>
         </li>
         <!-- Use 'startswith' check for student details to include sub-tabs -->
-        <li class="{% if '/colleges/' in request.path %}active{% endif %}">
+        <li class="{% if '/student/iitmadras/' in request.path %}active{% endif %}{% if '/colleges/' in request.path %}active{% endif %}">
             <a href="/student/colleges/">
                 <i class='bx bxs-group'></i>
                 <span class="text">Colleges</span>
@@ -68,14 +68,14 @@
         </li>
         
         
-        <li class="{% if request.path == '/student/closedenquiry/' %}active{% endif %}{% if request.path == '/student/studentactiveenquires/' %}active{% endif %}{% if request.path == '/student/send_enquiry/' %}active{% endif %}{% if request.path == '/student/enquires/' %}active{% endif %}">
+        <li class="{% if request.path == '/student/enquiry/1/' %}active{% endif %}{% if request.path == '/student/closedenquiry/' %}active{% endif %}{% if request.path == '/student/studentactiveenquires/' %}active{% endif %}{% if request.path == '/student/send_enquiry/' %}active{% endif %}{% if request.path == '/student/enquires/' %}active{% endif %}">
             <a href="/student/enquires/">
                 <i class='bx bxs-message-dots'></i>
                 <span class="text">Enquires</span>
             </a>
         </li>
-        <li class="{% if request.path == '/student/airecommendation/' %}active{% endif %}">
-            <a href="/student/airecommendation">
+        <li class="{% if request.path == '/student/college-search/' %}active{% endif %}">
+            <a href="/student/college-search/">
                 <i class='bx bxs-doughnut-chart'></i>
                 <span class="text">Ai Helper </span>
             </a>

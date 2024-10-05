@@ -1,0 +1,214 @@
+{% extends 'studentbase.html' %}
+
+{% block title %}IIT Madras - College Details{% endblock %}
+
+{% block content %}
+
+<div class="head-title">
+  <div class="left">
+      <h1>Dashboard</h1>
+      <ul class="breadcrumb">
+          <li>
+              <a href="#">Dashboard</a>
+          </li>
+          <li><i class='bx bx-chevron-right'></i></li>
+          <li>
+              <a class="active" href="#">Colleges</a>
+          </li>
+          <li><i class='bx bx-chevron-right'></i></li>
+          <li>
+              <a class="active" href="#">iit Madras</a>
+          </li>
+      </ul>
+  </div>
+
+</div>
+
+<div class="iit-madras-page">
+  <div class="college-header">
+    <img src="https://images.collegedunia.com/public/reviewPhotos/694543/IMG-20230727-WA0060.jpg" alt="IIT Madras Image" class="college-image">
+    <div class="college-overview">
+      <h1>IIT Madras</h1>
+      <p><strong>Location:</strong> Chennai, Tamil Nadu</p>
+      <p><strong>Established Year:</strong> 1959</p>
+      <p><strong>Type:</strong> Public Institute</p>
+      <p><strong>NIRF Ranking:</strong> #1</p>
+      <a href="{{ college.official_website }}" target="_blank" class="btn-official">Visit Official Website</a>
+      <!-- Add to List Button placed below Official Website -->
+      <button class="btn-add">Add to List</button>
+    </div>
+  </div>
+
+  <div class="college-content">
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>IIT Madras is one of India's top engineering institutes, known for its excellent academics, research, and campus facilities. Established in 1959, it offers undergraduate, postgraduate, and doctoral programs in various disciplines of engineering, sciences, and management.</p>
+    </section>
+
+    <section id="courses">
+      <h2>Courses Offered</h2>
+      <div class="courses-list">
+        <div class="course">
+          <h3>B.Tech</h3>
+          <p>Duration: 4 Years</p>
+          <p>Eligibility: JEE Advanced</p>
+        </div>
+        <div class="course">
+          <h3>M.Tech</h3>
+          <p>Duration: 2 Years</p>
+          <p>Eligibility: GATE</p>
+        </div>
+        <div class="course">
+          <h3>MBA</h3>
+          <p>Duration: 2 Years</p>
+          <p>Eligibility: CAT</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="admissions">
+      <h2>Admissions</h2>
+      <p>Admissions to IIT Madras are based on entrance exams such as JEE Advanced for B.Tech, GATE for M.Tech, and CAT for MBA programs. Students are shortlisted based on their scores and must attend counseling for seat allocation.</p>
+    </section>
+
+    <section id="placements">
+      <h2>Placements</h2>
+      <p>IIT Madras has a stellar placement record, with top companies like Google, Microsoft, and Tata Consultancy Services recruiting students. The highest package offered in 2023 was ₹1.4 crore per annum.</p>
+    </section>
+
+    <section id="facilities">
+      <h2>Campus Facilities</h2>
+      <ul>
+        <li>Library</li>
+        <li>Sports Complex</li>
+        <li>Hostels</li>
+        <li>Wi-Fi Campus</li>
+        <li>Labs</li>
+      </ul>
+    </section>
+
+    <section id="reviews">
+      <h2>Student Reviews</h2>
+      <p>IIT Madras is highly rated by students for its campus life, faculty, and placements. It has an overall rating of 4.8/5 on CollegeDunia.</p>
+    </section>
+  </div>
+</div>
+
+<style>
+  .iit-madras-page {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .college-header {
+    display: flex;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .college-image {
+    width: 300px;
+    height: auto;
+    margin-right: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .college-overview {
+    flex: 1;
+  }
+
+  .college-overview h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+
+  .btn-official {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;  /* Smaller padding for the official button */
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none; /* For button */
+    cursor: pointer; /* Pointer cursor for button */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+
+  .btn-add {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 12px 24px;  /* Smaller padding for the official button */
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none; /* For button */
+    cursor: pointer; /* Pointer cursor for button */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+
+  .college-content section {
+    margin-bottom: 40px;
+  }
+
+  .college-content section h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .courses-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .course {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: calc(33% - 20px);
+    text-align: center;
+    transition: transform 0.2s; /* Animation effect */
+  }
+
+  .course:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+  }
+
+  ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+
+  ul li {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .college-header {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .college-image {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+
+    .course {
+      width: 100%;
+    }
+  }
+</style>
+{% endblock %}

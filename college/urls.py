@@ -8,4 +8,6 @@ urlpatterns = [
     path('login/', CollegeLoginView.as_view(), name='college_login'),
     path('mail/', upload_mail, name='mail'),
     path('download-excel-template/', download_excel_template, name='download_excel_template'),
+    path('meetings/', college_meetings, name='college_meetings'),
+    path('college/meetings/update/<int:id>/', update_meeting_status, name='update_meeting_status'),
 ]

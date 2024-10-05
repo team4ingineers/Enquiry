@@ -546,6 +546,70 @@ def college_health_details(request, college_id):
         'disagreement_percentage': round(disagreement_percentage, 2),
     })
 
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import CollegeHealthScore, StudentFeedback
+from college.models import College
+import google.generativeai as genai
+
+# Configure the Gemini model
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 64,
+    "max_output_tokens": 8192,
+}
+
+def college_health_details(request, college_id):
+    college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
+
+    # Initialize variables for Gemini API response
+    health_score_description = ""
+    gemini_health_score = ""
+
+    user_input = (
+        f"Generate a health score percentage and a detailed description for the college '{college_health.college.user.username}'. "
+        f"Consider academic performance, student satisfaction, placement opportunities."
+        f"use and gieNIRF and NAAC Rankings, internet feedbacks and information"
+    )
+
+    try:
+        model = genai.GenerativeModel(
+            model_name="gemini-1.0-pro",
+            generation_config=generation_config,
+        )
+
+        chat_session = model.start_chat(history=[])
+        response = chat_session.send_message(user_input)
+
+        # Extract the health score and description from the Gemini response
+        response_text = response.text
+        # Assume the first line of response contains the health score like "Health Score: 85/100"
+        gemini_health_score = response_text.splitlines()[0]  # Extract the first line as health score
+        health_score_description = "\n".join(response_text.splitlines()[1:])  # Rest of the text as description
+    except Exception as e:
+        health_score_description = f"An error occurred: {str(e)}"
+        gemini_health_score = "N/A"
+
+    # Calculate feedback percentages
+    total_feedback = college_health.number_of_agreements + college_health.number_of_disagreements
+    if total_feedback > 0:
+        agreement_percentage = (college_health.number_of_agreements / total_feedback) * 100
+        disagreement_percentage = (college_health.number_of_disagreements / total_feedback) * 100
+    else:
+        agreement_percentage = 0
+        disagreement_percentage = 0
+
+    return render(request, 'college_health_details.html', {
+        'college_health': college_health,
+        'gemini_health_score': gemini_health_score,  # Pass the Gemini health score
+        'health_score_description': health_score_description,  # Pass the Gemini description
+        'agreement_percentage': round(agreement_percentage, 2),
+        'disagreement_percentage': round(disagreement_percentage, 2),
+    })
+
+
 
 
 @login_required
@@ -580,3 +644,34 @@ def health_score_list(request):
         'health_scores': health_scores,
         'message': message  # Pass the message to the template
     })
+
+
+def enquiry_detail(request, id):
+    enquiry = get_object_or_404(Enquiry, id=id)
+    return render(request, 'enquiry_detail.html', {'enquiry': enquiry})
+
+
+
+
+def iitmadras(request):
+    return render(request,'iitmadras.html')
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Enquiry, Meeting
+from .forms import ScheduleMeetingForm
+
+def schedule_meeting(request, id):
+    enquiry = get_object_or_404(Enquiry, id=id)
+    
+    if request.method == 'POST':
+        form = ScheduleMeetingForm(request.POST)
+        if form.is_valid():
+            meeting = form.save(commit=False)  # Don’t save yet, we need to link it to the enquiry
+            meeting.enquiry = enquiry  # Link the meeting to the enquiry
+            meeting.save()  # Now save it
+            return redirect('enquiry_detail', id=enquiry.id)  # Redirect to the enquiry detail page
+    else:
+        form = ScheduleMeetingForm()
+
+    return render(request, 'schedule_meeting.html', {'form': form, 'enquiry': enquiry})
