@@ -52,11 +52,12 @@
             </a>
         </li>
         <li class="{% if request.path == '/tools/' %}active{% endif %}">
-            <a href="/tools/">
+            <a href="{% url 'mail' %}">
                 <i class='bx bxs-shopping-bag-alt'></i>
                 <span class="text">Tools</span>
             </a>
         </li>
+        
     </ul>
     <ul class="side-menu">
         <li class="{% if request.path == '/settings/' %}active{% endif %}">

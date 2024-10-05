@@ -80,7 +80,7 @@ from django.contrib import messages
 
 from django.contrib import messages
 
-def upload_invitation(request):
+def upload_mail(request):
     if request.method == 'POST':
         # File upload
         excel_file = request.FILES.get('excel_file')
@@ -164,7 +164,7 @@ def upload_invitation(request):
             messages.error(request, "Some mails failed to send. Please check the logs.")
 
     # Render the upload invitations template
-    return render(request, 'upload_invitation.html')
+    return render(request, 'mail.html')
 
 
 

@@ -63,6 +63,7 @@ def student_dashboard_view(request):
 
 
 
+
 import os
 from dotenv import load_dotenv
 from django.shortcuts import render
@@ -158,12 +159,31 @@ def get_college_recommendations(marks, location, course, budget):
     
     return recommendations
 
-def college_recommendation(request):
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
+from django.shortcuts import render
+
+load_dotenv()
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+
+generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 64,
+    "max_output_tokens": 8192,
+    "response_mime_type": "text/plain",
+}
+
+def college_search(request):
     response_text = ""
+   
     if request.method == "POST":
-        student_name = request.POST.get("student_name", "")
-        marks = int(request.POST.get("marks", ""))
-        address = request.POST.get("address", "")
+        name = request.POST.get("name", "")
+        age = request.POST.get("age", "")
+        gender = request.POST.get("gender", "")
+        category = request.POST.get("category", "")
+        course = request.POST.get("course", "")
         location = request.POST.get("location", "")
         course = request.POST.get("course", "")
         budget = int(request.POST.get("budget", ""))
@@ -200,19 +220,15 @@ def college_recommendation(request):
             chat_session = model.start_chat(history=[])
             response = chat_session.send_message(user_input)
             response_text = response.text
-        else:
-            # Prepare a detailed response from predefined suggestions
-            response_text = "Here are some college suggestions based on your inputs:\n\n"
-            for college in college_suggestions:
-                response_text += f"**{college['name']}**\n"
-                response_text += f"Details: {college['details']}\n"
-                response_text += f"Address: {college['address']}\n"
-                response_text += f"Average Salary: {college['average_salary']}\n"
-                response_text += f"Courses Offered: {', '.join(college['courses_offered'])}\n\n"
+        except Exception as e:
+            response_text = f"An error occurred: {str(e)}"
 
     context = {'response': response_text}
-    return render(request, 'gemini.html', context)
+    return render(request, 'gemini.html',context)
 
+def airecommendation(request):
+    
+    return render(request, 'gemini.html')
 
 
 from django.shortcuts import render, get_object_or_404
@@ -235,8 +251,6 @@ def enquires(request):
     enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
     return render(request, 'student_enquires.html', {'enquiries': enquiries, 'user_type': 'Student'})
 
-def airecommendation(request):
-    return render(request, 'gemini.html')
 
 
 
@@ -369,6 +383,42 @@ def view_folder_contents(request, folder_id):
 
 
 
+def complete_profile(request):
+    return render(request,'profile_form.html')
+
+
+
+from django.shortcuts import render, redirect,HttpResponse
+from django.contrib.auth.decorators import login_required
+from .forms import StudentProfileForm
+from .models import Enquiry
+
+from django.shortcuts import redirect
+from django.contrib import messages
+
+@login_required
+def complete_profile(request):
+    student = request.user  # Assuming the user is a Student instance
+    profile, created = StudentProfile.objects.get_or_create(student=student)  # Get or create profile
+
+    # Check if the profile has already been completed
+    if profile.is_completed:
+        messages.info(request, 'Your profile has already been completed and cannot be edited again.')
+        return HttpResponse('Completed')  # Replace 'profile_page' with the actual profile view name
+
+    if request.method == 'POST':
+        form = StudentProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.student = student  # Set the student reference
+            profile.is_completed = True  # Mark the profile as completed
+            profile.save()  # Save the profile
+            
+            return HttpResponse('completetd')  # Replace 'profile_page' with the actual profile view name
+    else:
+        form = StudentProfileForm(instance=profile)
+
+    return render(request, 'complete_profile.html', {'form': form})
 
 def studentactiveenquires(request):
     return render(request, 'studentactiveenquires.html')
@@ -376,6 +426,22 @@ def studentactiveenquires(request):
 
 
 
+<<<<<<< HEAD
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Student
+
+@login_required
+def student_dashboard_view(request):
+    try:
+        student = request.user.student
+    except Student.DoesNotExist:
+        # Redirect the user to complete their profile if Student object doesn't exist
+        return redirect('student_dashboard')
+    
+    # Your existing dashboard logic goes here
+    return render(request, 'student_dashboard.html', {'student': student})
+=======
 def studentactiveenquires(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
@@ -386,6 +452,7 @@ def closedenquiry(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all() 
     return render(request, 'closedenquiry.html',{'enquiries': enquiries, 'user_type': 'Student'})
+>>>>>>> 5afd96a3ae01cb52ed7638cd32255edada1c6dc8
 
 
 def enquiry_detail(request, id):
@@ -397,3 +464,5 @@ def schedule_meeting(request, id):
     enquiry = get_object_or_404(Enquiry, id=id)
     # Logic for scheduling a meeting goes here
     return render(request, 'schedule_meeting.html', {'enquiry': enquiry})
+def iitmadras(request):
+    return render(request,'iitmadras.html')
