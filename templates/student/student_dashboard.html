@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Student Dashboard</h2>
+  <h3>Your Enquiries</h3>
+  <ul>
+    {% for enquiry in enquiries %}
+      <li>
+        Enquiry to {{ enquiry.college.user.username }}: {{ enquiry.message }} <br>
+        Status: {{ enquiry.status }} <br>
+        Seen by College: {{ enquiry.seen_by_college }} <br>
+        Response: {{ enquiry.response|default:"No response yet" }}
+      </li>
+    {% empty %}
+      <li>You have not made any enquiries yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -14,3 +14,9 @@ class StudentSignUpForm(UserCreationForm):
             user.save()
             Student.objects.create(user=user)
         return user
+    
+
+class EnquiryForm(forms.ModelForm):
+    class Meta:
+        model = Enquiry
+        fields = ['college', 'message']  # Allow students to choose a college and write a message
