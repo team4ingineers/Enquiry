@@ -13,7 +13,6 @@ class StudentProfileAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 # Register Enquiry model
-<<<<<<< HEAD
 admin.site.register(Enquiry)
 
 
@@ -22,6 +21,3 @@ from .models import CollegeHealthScore, StudentFeedback
 
 admin.site.register(CollegeHealthScore)
 admin.site.register(StudentFeedback)
-=======
-admin.site.register(Enquiry)
->>>>>>> 0c63b5542ab139f0365bbadcf5c556f072fb1f91
