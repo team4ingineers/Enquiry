@@ -1,5 +1,7 @@
 {% extends 'studentbase.html' %}
 
+{% block title %}Colleges{% endblock %}
+
 {% block content %}
     <h1>List of Colleges</h1>
     <table border="1">
@@ -8,7 +10,9 @@
                 <th>#</th>
                 <th>Name</th>
                 <th>Location</th>
-                <th>Established</th>
+                <th>Established Year</th> <!-- Changed from "Established" to "Established Year" for clarity -->
+                <th>Top Courses</th> <!-- Add this if you want to display top courses -->
+                <th>Official Website</th> <!-- Add this if you want to display the official website -->
             </tr>
         </thead>
         <tbody>
@@ -16,16 +20,16 @@
                 <tr>
                     <td>{{ forloop.counter }}</td> <!-- Shows the row number -->
                     <td>{{ college.user.username }}</td> <!-- Displays the username of the associated user -->
-                    <td>{{ college.location }}</td> <!-- College location (once added to the model) -->
-                    <td>{{ college.established }}</td> <!-- College established year (once added to the model) -->
+                    <td>{{ college.location }}</td> <!-- College location -->
+                    <td>{{ college.established_year }}</td> <!-- College established year -->
+                    <td>{{ college.top_courses }}</td> <!-- Optionally display top courses -->
+                    <td><a href="{{ college.official_website }}" target="_blank">{{ college.official_website }}</a></td> <!-- Official website link -->
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="4">No colleges available.</td>
+                    <td colspan="6">No colleges available.</td> <!-- Updated colspan to match the number of columns -->
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 {% endblock content %}
-
-{% block title %}Colleges{% endblock %}
