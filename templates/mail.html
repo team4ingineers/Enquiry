@@ -1,3 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Invitations{% endblock %}
+
+{% block body_class %}upload-invitations{% endblock %}
+
+{% block content %}
 <div class="upload-invitations">
     <style>
         /* Custom styles specific to the upload invitations page */
@@ -65,7 +72,6 @@
             --dark-blue: #0056b3;
         }
         
-
         .notification {
             margin-top: 20px;
             padding: 15px;
@@ -81,30 +87,36 @@
     </style>
 
     <div class="upload-title">
-        <h1>Email tool</h1>
+        <h1>Email Tool</h1>
         <div id="notification" class="notification"></div>
     </div>
     <a href="{% url 'download_excel_template' %}" class="download-button">Download Standard Template</a>
     
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="excel_file">Excel File:</label>
-        <input type="file" name="excel_file" required><br>
+        <div class="form-group">
+            <label for="excel_file">Excel File:</label>
+            <input type="file" name="excel_file" required><br>
+        </div>
     
-        <label for="invitation_files">Attach PDF/Image (optional):</label>
-        <input type="file" name="invitation_files" multiple><br>
+        <div class="form-group">
+            <label for="invitation_files">Attach PDF/Image (optional):</label>
+            <input type="file" name="invitation_files" multiple><br>
+        </div>
     
-        <label for="email_subject">Email Subject:</label>
-        <input type="text" name="email_subject" required><br>
+        <div class="form-group">
+            <label for="email_subject">Email Subject:</label>
+            <input type="text" name="email_subject" required><br>
+        </div>
     
-        <label for="email_body">Email Body:</label>
-        <textarea name="email_body" rows="8" cols="50" required></textarea>
-        <strong>Use placeholders like {{student_name}} and {{student_phone}} for dynamic content.</strong><br>
+        <div class="form-group">
+            <label for="email_body">Email Body:</label>
+            <textarea name="email_body" rows="8" cols="50" required></textarea>
+            <strong>Use placeholders like {{student_name}} and {{student_phone}} for dynamic content.</strong><br>
+        </div>
     
         <input type="submit" value="Send Mails">
     </form>
-    
-    
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -118,5 +130,5 @@
             {% endif %}
         });
     </script>
-    
 </div>
+{% endblock %}

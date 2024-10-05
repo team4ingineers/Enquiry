@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Profile</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap');
+
+        body {
+            font-family: "Playfair Display", serif;
+            background-color: #e9eff7; /* Light bluish background */
+            color: #2e3b55; /* Luxury dark blue for text */
+        }
+
+        /* Form container with shadow */
+        .form-wrapper {
+            background-color: #dbe5f1; /* Shaded background */
+            padding: 50px 0; /* Padding for the form's background */
+            overflow: hidden; /* Prevent scroll during form animation */
+        }
+
+        .form-container {
+            background-color: #fff;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out; /* Fade-in animation for the form */
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Form title */
+        h1,
+        h3 {
+            text-align: center;
+            color: #003366;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            animation: slideIn 0.5s ease-in-out; /* Slide-in animation for the title */
+        }
+
+        h3 {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* Slide-in animation */
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Form label */
+        label {
+            display: block;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease-in-out; /* Fade-in animation for labels */
+        }
+
+        /* Input fields */
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth focus animation */
+            animation: fadeIn 0.5s ease-in-out; /* Fade-in animation for inputs */
+            font: serif;
+        }
+
+        /* Input hover and focus effects */
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="email"]:focus,
+        textarea:focus,
+        select:focus {
+            background-color: #eef6ff; /* Light blue background on focus */
+            border-color: #007bff; /* Blue border on focus */
+            outline: none;
+        }
+
+        /* Submit button */
+        input[type="submit"] {
+            width: 100%;
+            background-color: #003366;
+            color: #fff;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Submit button animation */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #00274d;
+            transform: scale(1.05); /* Slightly enlarges the button on hover */
+        }
+
+        input[type="submit"]:active {
+            transform: scale(1); /* Returns to normal size when clicked */
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+                margin: 20px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label {
+                font-size: 16px;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            input[type="email"],
+            textarea,
+            select {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            input[type="submit"] {
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+
+        .errorlist {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .error {
+            background-color: rgba(255, 0, 0, 0.1); /* Light red background */
+            color: #d8000c; /* Darker red for text */
+            border: 1px solid #d8000c; /* Dark red border */
+            padding: 10px;
+            margin-top: 5px; /* Space above the error message */
+            border-radius: 5px; /* Slightly rounded corners */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-wrapper">
+    <div class="form-container">
+        <h1>Complete Student Profile</h1>
+        
+        {% if form.instance.is_completed %}
+            <p>Your profile has already been completed and cannot be edited again.</p>
+            <a href="{% url 'profile_page' %}">Go to Profile</a> <!-- Link to the profile page -->
+        {% else %}
+            <form method="post" action="{% url 'complete_profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+        
+                <!-- Name Input -->
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" value="{{ form.name.value }}" required {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <!-- ABC ID/Aadhar Input -->
+                <label for="abc_id">ABC ID/Aadhar</label>
+                <input type="text" id="abc_id" name="abc_id" value="{{ form.abc_id.value }}" required {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <!-- Email Input -->
+                <label for="email">Email ID</label>
+                <input type="email" id="email" name="email" value="{{ form.email.value }}" required {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <!-- Annual Income Input -->
+                <label for="annual_income">Annual Income</label>
+                <select id="annual_income" name="annual_income" required {% if form.instance.is_completed %}disabled{% endif %}>
+                    <option value="" disabled {% if not form.annual_income.value %}selected{% endif %}>Select your annual income</option>
+                    <option value="0-2.5L" {% if form.annual_income.value == "0-2.5L" %}selected{% endif %}>Up to ₹2.5 Lakh</option>
+                    <option value="2.5L-5L" {% if form.annual_income.value == "2.5L-5L" %}selected{% endif %}>₹2.5 Lakh - ₹5 Lakh</option>
+                    <option value="5L-10L" {% if form.annual_income.value == "5L-10L" %}selected{% endif %}>₹5 Lakh - ₹10 Lakh</option>
+                    <option value="10L-20L" {% if form.annual_income.value == "10L-20L" %}selected{% endif %}>₹10 Lakh - ₹20 Lakh</option>
+                    <option value="20L-50L" {% if form.annual_income.value == "20L-50L" %}selected{% endif %}>₹20 Lakh - ₹50 Lakh</option>
+                    <option value="50L+" {% if form.annual_income.value == "50L+" %}selected{% endif %}>Above ₹50 Lakh</option>
+                </select>
+    
+                <!-- Category Input -->
+                <label for="category">Category</label>
+                <select id="category" name="category" required {% if form.instance.is_completed %}disabled{% endif %}>
+                    <option value="" disabled {% if not form.category.value %}selected{% endif %}>Select your category</option>
+                    <option value="general" {% if form.category.value == "general" %}selected{% endif %}>General</option>
+                    <option value="sc" {% if form.category.value == "sc" %}selected{% endif %}>SC</option>
+                    <option value="st" {% if form.category.value == "st" %}selected{% endif %}>ST</option>
+                    <option value="obc" {% if form.category.value == "obc" %}selected{% endif %}>OBC</option>
+                </select>
+    
+                <!-- Category Certificate Upload -->
+                <label for="category_certificate">Upload Category Certificate</label>
+                <input type="file" id="category_certificate" name="category_certificate" accept=".pdf, .doc, .docx, .jpg, .png" {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <!-- Disability Input -->
+                <label for="disability">Disability (if any)</label>
+                <input type="text" id="disability" name="disability" value="{{ form.disability.value }}" {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <!-- Disability Certificate Upload -->
+                <label for="disability_certificate">Upload Disability Certificate</label>
+                <input type="file" id="disability_certificate" name="disability_certificate" accept=".pdf, .doc, .docx, .jpg, .png" {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <!-- ID Proof Upload -->
+                <label for="id_proof">Upload ID Proof (Max 2-3 files)</label>
+                <input type="file" id="id_proof" name="id_proof" accept=".pdf, .doc, .docx, .jpg, .png" multiple {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <!-- Latest Exam Details -->
+                <h3>Latest Exam Details (e.g., CET)</h3>
+                <label for="exam_name">Exam Name</label>
+                <input type="text" id="exam_name" name="exam_name" value="{{ form.exam_name.value }}" required {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <label for="exam_roll_number">Roll Number (Seat Number)</label>
+                <input type="text" id="exam_roll_number" name="exam_roll_number" value="{{ form.exam_roll_number.value }}" required {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <label for="exam_marks">Marks Obtained</label>
+                <input type="number" id="exam_marks" name="exam_marks" value="{{ form.exam_marks.value }}" required min="0" {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <label for="exam_certificate">Upload Exam Certificate</label>
+                <input type="file" id="exam_certificate" name="exam_certificate" accept=".pdf, .doc, .docx, .jpg, .png" {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <!-- Annual Income Certificate Upload -->
+                <label for="annual_income_certificate">Upload Annual Income Certificate</label>
+                <input type="file" id="annual_income_certificate" name="annual_income_certificate" accept=".pdf, .doc, .docx, .jpg, .png" {% if form.instance.is_completed %}disabled{% endif %} />
+    
+                <!-- Additional Information -->
+                <h3>Additional Information</h3>
+                <label for="additional_info">Any other relevant information</label>
+                <textarea id="additional_info" name="additional_info" rows="4" {% if form.instance.is_completed %}disabled{% endif %}>{{ form.additional_info.value }}</textarea>
+    
+                <input type="submit" value="Submit" {% if form.instance.is_completed %}disabled{% endif %} />
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+</body>
+
+</html>
+{% endblock %}

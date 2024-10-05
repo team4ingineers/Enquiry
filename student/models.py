@@ -35,3 +35,30 @@ class CollegeTour(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class StudentProfile(models.Model):
+    student = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)  # Add this line for the name field
+    abc_id = models.CharField(max_length=100)
+    email = models.EmailField()
+    annual_income = models.CharField(max_length=50)
+    category = models.CharField(max_length=50)
+    category_certificate = models.FileField(upload_to='category_certificates/', blank=True, null=True)
+    disability = models.CharField(max_length=100, blank=True, null=True)
+    disability_certificate = models.FileField(upload_to='disability_certificates/', blank=True, null=True)
+    id_proof = models.FileField(upload_to='id_proofs/', blank=True, null=True)
+    exam_name = models.CharField(max_length=100)
+    exam_roll_number = models.CharField(max_length=100)
+    exam_marks = models.IntegerField(blank=True, null=True)
+    exam_certificate = models.FileField(upload_to='exam_certificates/', blank=True, null=True)
+    annual_income_certificate = models.FileField(upload_to='annual_income_certificates/', blank=True, null=True)
+    additional_info = models.TextField(blank=True, null=True)
+    is_completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email  # Or any other string representation you prefer
