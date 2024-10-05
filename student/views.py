@@ -63,6 +63,7 @@ def student_dashboard_view(request):
 
 
 
+
 import os
 from dotenv import load_dotenv
 from django.shortcuts import render
@@ -160,23 +161,32 @@ def get_college_recommendations(marks, location, course, budget):
 
 def college_recommendation(request):
     response_text = ""
+   
     if request.method == "POST":
+        
         student_name = request.POST.get("student_name", "")
-        marks = int(request.POST.get("marks", ""))
+        try:
+            marks = int(request.POST.get("marks", ""))
+            budget = int(request.POST.get("budget", ""))
+        except ValueError:
+            return render(request, 'gemini.html', {'response': "Please enter valid numeric values for marks and budget."})
+
         address = request.POST.get("address", "")
         location = request.POST.get("location", "")
         course = request.POST.get("course", "")
-        budget = int(request.POST.get("budget", ""))
         special_requirements = request.POST.get("special_requirements", "")
 
         # Process latitude, longitude if provided for current location
         if "," in location:
-            lat, lon = map(float, location.split(","))
-            location = "Mumbai"  # Simulating for now
+            try:
+                lat, lon = map(float, location.split(","))
+                location = "Mumbai"  # Simulating for now
+            except ValueError:
+                return render(request, 'gemini.html', {'response': "Invalid location format. Please use 'lat, lon'."})
 
         # Fetch recommendations from pre-defined data
         college_suggestions = get_college_recommendations(marks, location, course, budget)
-        
+
         if not college_suggestions:
             # Fallback to AI model if no pre-defined matches
             user_input = f"""
@@ -214,6 +224,10 @@ def college_recommendation(request):
     return render(request, 'gemini.html', context)
 
 
+def airecommendation(request):
+    
+    return render(request, 'gemini.html')
+
 
 from django.shortcuts import render, get_object_or_404
 from student.models import CollegeTour  # Import the CollegeTour model
@@ -235,8 +249,6 @@ def enquires(request):
     enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
     return render(request, 'student_enquires.html', {'enquiries': enquiries, 'user_type': 'Student'})
 
-def airecommendation(request):
-    return render(request, 'gemini.html')
 
 
 
@@ -369,9 +381,58 @@ def view_folder_contents(request, folder_id):
 
 
 
+def complete_profile(request):
+    return render(request,'profile_form.html')
+
+
+
+from django.shortcuts import render, redirect,HttpResponse
+from django.contrib.auth.decorators import login_required
+from .forms import StudentProfileForm
+from .models import Enquiry
+
+from django.shortcuts import redirect
+from django.contrib import messages
+
+@login_required
+def complete_profile(request):
+    student = request.user  # Assuming the user is a Student instance
+    profile, created = StudentProfile.objects.get_or_create(student=student)  # Get or create profile
+
+    # Check if the profile has already been completed
+    if profile.is_completed:
+        messages.info(request, 'Your profile has already been completed and cannot be edited again.')
+        return HttpResponse('Completed')  # Replace 'profile_page' with the actual profile view name
+
+    if request.method == 'POST':
+        form = StudentProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.student = student  # Set the student reference
+            profile.is_completed = True  # Mark the profile as completed
+            profile.save()  # Save the profile
+            
+            return HttpResponse('completetd')  # Replace 'profile_page' with the actual profile view name
+    else:
+        form = StudentProfileForm(instance=profile)
+
+    return render(request, 'complete_profile.html', {'form': form})
 
 
 
 
 
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Student
 
+@login_required
+def student_dashboard_view(request):
+    try:
+        student = request.user.student
+    except Student.DoesNotExist:
+        # Redirect the user to complete their profile if Student object doesn't exist
+        return redirect('student_dashboard')
+    
+    # Your existing dashboard logic goes here
+    return render(request, 'student_dashboard.html', {'student': student})
