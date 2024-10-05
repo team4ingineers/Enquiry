@@ -457,9 +457,27 @@ def enquiry_detail(request, id):
     return render(request, 'enquiry_detail.html', {'enquiry': enquiry})
 
 
-def schedule_meeting(request, id):
-    enquiry = get_object_or_404(Enquiry, id=id)
-    # Logic for scheduling a meeting goes here
-    return render(request, 'schedule_meeting.html', {'enquiry': enquiry})
+
+
 def iitmadras(request):
     return render(request,'iitmadras.html')
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Enquiry, Meeting
+from .forms import ScheduleMeetingForm
+
+def schedule_meeting(request, id):
+    enquiry = get_object_or_404(Enquiry, id=id)
+    
+    if request.method == 'POST':
+        form = ScheduleMeetingForm(request.POST)
+        if form.is_valid():
+            meeting = form.save(commit=False)  # Don’t save yet, we need to link it to the enquiry
+            meeting.enquiry = enquiry  # Link the meeting to the enquiry
+            meeting.save()  # Now save it
+            return redirect('enquiry_detail', id=enquiry.id)  # Redirect to the enquiry detail page
+    else:
+        form = ScheduleMeetingForm()
+
+    return render(request, 'schedule_meeting.html', {'form': form, 'enquiry': enquiry})

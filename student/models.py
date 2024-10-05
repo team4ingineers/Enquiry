@@ -63,3 +63,23 @@ class StudentProfile(models.Model):
 
     def __str__(self):
         return self.email  # Or any other string representation you prefer
+
+
+
+class Meeting(models.Model):
+    enquiry = models.ForeignKey('Enquiry', on_delete=models.CASCADE, related_name='meetings')
+    meeting_date = models.DateField()
+    meeting_time = models.TimeField()
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('APPROVED', 'Approved'),
+        ('DENIED', 'Denied'),
+        ('RESCHEDULED', 'Rescheduled'),
+    ]
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='PENDING')
+
+    def __str__(self):
+        return f"Meeting for {self.enquiry} on {self.meeting_date} at {self.meeting_time}"

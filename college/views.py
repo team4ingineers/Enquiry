@@ -181,3 +181,34 @@ def download_excel_template(request):
 
     # Serve the file for download
     return FileResponse(open(file_path, 'rb'), as_attachment=True, filename='standard_template.xlsx')
+
+
+from django.shortcuts import render
+from student.models import Meeting
+
+def college_meetings(request):
+    # Get the logged-in college
+    college = request.user.college
+
+    # Fetch all meetings where the enquiry is associated with this college
+    meetings = Meeting.objects.filter(enquiry__college=college).order_by('meeting_date', 'meeting_time')
+
+    return render(request, 'college_meetings.html', {'meetings': meetings})
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from student.models import Meeting
+from student.forms import UpdateMeetingStatusForm
+
+def update_meeting_status(request, id):
+    meeting = get_object_or_404(Meeting, id=id)
+
+    if request.method == 'POST':
+        form = UpdateMeetingStatusForm(request.POST, instance=meeting)
+        if form.is_valid():
+            form.save()
+            return redirect('college_meetings')  # Redirect to the meetings list after updating
+    else:
+        form = UpdateMeetingStatusForm(instance=meeting)
+
+    return render(request, 'update_meeting_status.html', {'form': form, 'meeting': meeting})
