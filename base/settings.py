@@ -33,7 +33,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

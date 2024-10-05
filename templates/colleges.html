@@ -3,33 +3,154 @@
 {% block title %}Colleges{% endblock %}
 
 {% block content %}
-    <h1>List of Colleges</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Location</th>
-                <th>Established Year</th> <!-- Changed from "Established" to "Established Year" for clarity -->
-                <th>Top Courses</th> <!-- Add this if you want to display top courses -->
-                <th>Official Website</th> <!-- Add this if you want to display the official website -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for college in colleges %}
-                <tr>
-                    <td>{{ forloop.counter }}</td> <!-- Shows the row number -->
-                    <td>{{ college.user.username }}</td> <!-- Displays the username of the associated user -->
-                    <td>{{ college.location }}</td> <!-- College location -->
-                    <td>{{ college.established_year }}</td> <!-- College established year -->
-                    <td>{{ college.top_courses }}</td> <!-- Optionally display top courses -->
-                    <td><a href="{{ college.official_website }}" target="_blank">{{ college.official_website }}</a></td> <!-- Official website link -->
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="6">No colleges available.</td> <!-- Updated colspan to match the number of columns -->
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+<div class="head-title">
+    <div class="left">
+        <h1>Dashboard</h1>
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Dashboard</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+                <a class="active" href="#">Colleges</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<h1 class="colleges-title">List of Colleges</h1> <!-- Changed class for targeting in CSS -->
+<div class="colleges-container">
+  {% for college in colleges %}
+    <div class="college-box">
+      <div class="college-image">
+        <!-- Use the college's image URL -->
+        <img src="{{ college.image_url }}" alt="{{ college.user.username }}" />
+      </div>
+      <div class="college-info">
+        <h2>{{ college.user.username }}</h2>
+        <p><strong>Location:</strong> {{ college.location }}</p>
+        <p><strong>Established Year:</strong> {{ college.established_year }}</p>
+        <p><strong>Top Courses:</strong> {{ college.top_courses }}</p>
+        <p><strong>Official Website:</strong> <a href="{{ college.official_website }}" target="_blank">{{ college.official_website }}</a></p>
+      </div>
+    </div>
+  {% empty %}
+    <p>No colleges available.</p>
+  {% endfor %}
+</div>
+
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1.colleges-title { /* Target the new class for the colleges title */
+    text-align: left; /* Align to the left */
+    font-size: 36px;
+    margin: 20px 0; /* Adjust margin for spacing */
+    color: #444;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    padding-left: 20px; /* Align with the college images */
+  }
+
+  .colleges-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between the boxes */
+    justify-content: center; /* Center align the boxes */
+    padding: 20px;
+  }
+
+  .college-box {
+    background: linear-gradient(145deg, #ffffff, #e6e6e6); /* Gradient background */
+    border-radius: 12px;
+    padding: 20px;
+    flex: 1 1 calc(33.333% - 20px); /* 3 boxes in a row */
+    max-width: 400px; /* Max width to prevent large boxes */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), 0 2px 10px rgba(0, 0, 0, 0.05); /* Enhanced shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for effects */
+    overflow: hidden; /* Hide overflow for a cleaner look */
+    position: relative; /* For animation effects */
+  }
+
+  .college-box:hover {
+    transform: translateY(-5px); /* Elevate box on hover */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(0, 0, 0, 0.1); /* Deeper shadow on hover */
+  }
+
+  .college-image {
+    height: 200px;
+    overflow: hidden; /* Crop images that exceed height */
+    border-radius: 12px;
+    margin-bottom: 15px;
+    position: relative; /* For absolute positioning of image */
+  }
+
+  .college-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the area */
+    transition: transform 0.3s ease; /* For scaling effect */
+    border-radius: 12px; /* Ensure image corners match the box */
+  }
+
+  .college-image:hover img {
+    transform: scale(1.05); /* Slightly scale up the image on hover */
+  }
+
+  .college-info {
+    text-align: left;
+    padding: 0 10px; /* Add padding for better spacing */
+  }
+
+  .college-info h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333; /* Darker shade for titles */
+    transition: color 0.3s ease; /* Smooth transition for title color */
+  }
+
+  .college-info h2:hover {
+    color: #1e88e5; /* Change color on hover */
+  }
+
+  .college-info p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #555; /* Softer color for paragraph text */
+    transition: color 0.3s ease; /* Smooth transition for paragraph text */
+  }
+
+  .college-info p strong {
+    color: #333; /* Strong color for strong tags */
+  }
+
+  /* Link styling */
+  .college-info a {
+    color: #1e88e5; /* Link color */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth transition for links */
+  }
+
+  .college-info a:hover {
+    text-decoration: underline; /* Underline on hover for emphasis */
+    color: #0d47a1; /* Darker shade for hover effect */
+  }
+
+  /* Responsive styles */
+  @media (max-width: 1200px) {
+    .college-box {
+      flex: 1 1 calc(50% - 20px); /* 2 boxes in a row for medium screens */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .college-box {
+      flex: 1 1 100%; /* 1 box for small screens */
+    }
+  }
+</style>
 {% endblock content %}

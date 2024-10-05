@@ -16,6 +16,7 @@ class College(models.Model):
     admission_criteria = models.CharField(max_length=255)
     top_courses = models.CharField(max_length=255)  # You can modify this to ManyToMany if needed
     official_website = models.URLField()
+    image_url = models.URLField() 
 
     def __str__(self):
         return self.user.username  # Returns the username of the user linked to the college
