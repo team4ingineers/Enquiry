@@ -21,15 +21,26 @@ def college_signup(request):
     return render(request, 'college_signup.html', {'form': form})
 
 
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from .models import College
+from django.urls import reverse
+
+class CollegeLoginView(LoginView):
+    template_name = 'college/college_login.html'
+
+    def get_success_url(self):
+        # Redirect to college dashboard after successful login
+        return reverse('college_dashboard')
+
 @login_required
 def college_dashboard_view(request):
-    college = College.objects.get(user=request.user)  # Get the logged-in college
-    enquiries = Enquiry.objects.filter(college=college)  # Get all enquiries for this college
-
-    # Mark all enquiries as seen when the college views the dashboard
-    enquiries.update(seen_by_college=True)
-
+    college = College.objects.get(user=request.user)
+    enquiries = college.enquiry_set.all()  # Retrieve all enquiries made for this college
+    enquiries.update(seen_by_college=True)  # Mark them as seen
     return render(request, 'college/college_dashboard.html', {'enquiries': enquiries, 'user_type': 'College'})
+
 
 
 @login_required

@@ -35,11 +35,27 @@ def send_enquiry(request):
 
     return render(request, 'student/send_enquiry.html', {'form': form})
 
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from .models import Student
+
+from django.urls import reverse
+
+class StudentLoginView(LoginView):
+    template_name = 'student/student_login.html'
+
+    def get_success_url(self):
+        # Return the URL string using reverse
+        return reverse('student_dashboard')
+
+
 @login_required
 def student_dashboard_view(request):
-    student = Student.objects.get(user=request.user)  # Get the logged-in student
-    enquiries = Enquiry.objects.filter(student=student)  # Get all enquiries made by the student
+    student = Student.objects.get(user=request.user)
+    enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
     return render(request, 'student/student_dashboard.html', {'enquiries': enquiries, 'user_type': 'Student'})
+
 
 
 

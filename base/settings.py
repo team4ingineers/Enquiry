@@ -131,7 +131,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Ensure this points to your media
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGOUT_REDIRECT_URL = ''
+LOGIN_REDIRECT_URL = '/'  # Redirect to homepage after login if no success URL is provided
+LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

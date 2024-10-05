@@ -6,11 +6,12 @@ urlpatterns = [
     path('signup/', student_signup, name='student_signup'),
     path('send_enquiry/', send_enquiry, name='send_enquiry'),
     path('student_dashboard/', student_dashboard_view, name='student_dashboard'),
-     path('tour/<int:id>/', college_tour, name='college_tour'),
-     path('aibot/', college_recommendation, name='college_recommendation'),
+    path('tour/<int:id>/', college_tour, name='college_tour'),
+    path('aibot/', college_recommendation, name='college_recommendation'),
     path('colleges/', colleges , name = 'colleges'),
     path('enquires/', enquires , name = 'enquires'),
-    path('airecommendation/', airecommendation, name = 'airecommendation')
+    path('airecommendation/', airecommendation, name = 'airecommendation'),
+    path('login/', StudentLoginView.as_view(), name='student_login'),
 ]
 
 
