@@ -34,6 +34,8 @@
         <p><strong>Established Year:</strong> {{ college.established_year }}</p>
         <p><strong>Top Courses:</strong> {{ college.top_courses }}</p>
         <p><strong>Official Website:</strong> <a href="{{ college.official_website }}" target="_blank">{{ college.official_website }}</a></p>
+        <!-- Add to List Button -->
+        <button class="btn-add" data-college-id="{{ college.id }}">Add to List</button>
       </div>
     </div>
   {% empty %}
@@ -129,6 +131,22 @@
     color: #333; /* Strong color for strong tags */
   }
 
+  /* Button styling */
+  .btn-add {
+    background-color: #007bff; /* Button background color */
+    color: white; /* Button text color */
+    padding: 10px; /* Button padding */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Round edges */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-top: 10px; /* Space above button */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+  }
+
+  .btn-add:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }
+
   /* Link styling */
   .college-info a {
     color: #1e88e5; /* Link color */
@@ -154,4 +172,38 @@
     }
   }
 </style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll('.btn-add');
+    
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        const collegeId = this.dataset.collegeId;
+
+        fetch('/add_to_list/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ college_id: collegeId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('College added to your list!');
+            // Optionally update the dropdown in the enquiry form here
+          } else {
+            alert('Failed to add college. Please try again.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      });
+    });
+  });
+</script>
+
 {% endblock content %}

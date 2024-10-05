@@ -13,6 +13,8 @@
       <p><strong>Type:</strong> Public Institute</p>
       <p><strong>NIRF Ranking:</strong> #1</p>
       <a href="{{ college.official_website }}" target="_blank" class="btn-official">Visit Official Website</a>
+      <!-- Add to List Button placed below Official Website -->
+      <button class="btn-add">Add to List</button>
     </div>
   </div>
 
@@ -79,10 +81,10 @@
     padding: 20px;
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  .iit-madras-page .college-header {
+  .college-header {
     display: flex;
     background-color: #f0f0f0;
     padding: 20px;
@@ -91,77 +93,99 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .iit-madras-page .college-image {
+  .college-image {
     width: 300px;
     height: auto;
     margin-right: 20px;
     border-radius: 10px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
   }
 
-  .iit-madras-page .college-overview {
+  .college-overview {
     flex: 1;
   }
 
-  .iit-madras-page .college-overview h1 {
+  .college-overview h1 {
     font-size: 32px;
     margin-bottom: 10px;
   }
 
-  .iit-madras-page .btn-official {
+  .btn-official {
     display: inline-block;
     margin-top: 10px;
-    padding: 10px 20px;
+    padding: 10px 20px;  /* Smaller padding for the official button */
     background-color: #007bff;
     color: white;
     text-decoration: none;
     border-radius: 5px;
+    border: none; /* For button */
+    cursor: pointer; /* Pointer cursor for button */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   }
 
-  .iit-madras-page .college-content section {
+  .btn-add {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 12px 24px;  /* Smaller padding for the official button */
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none; /* For button */
+    cursor: pointer; /* Pointer cursor for button */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+
+  .college-content section {
     margin-bottom: 40px;
   }
 
-  .iit-madras-page .college-content section h2 {
+  .college-content section h2 {
     font-size: 28px;
     margin-bottom: 20px;
   }
 
-  .iit-madras-page .courses-list {
+  .courses-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
   }
 
-  .iit-madras-page .course {
+  .course {
     background-color: #f8f9fa;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     width: calc(33% - 20px);
     text-align: center;
+    transition: transform 0.2s; /* Animation effect */
   }
 
-  .iit-madras-page ul {
+  .course:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+  }
+
+  ul {
     list-style-type: disc;
     padding-left: 20px;
   }
 
-  .iit-madras-page ul li {
+  ul li {
     margin-bottom: 10px;
   }
 
   @media (max-width: 768px) {
-    .iit-madras-page .college-header {
+    .college-header {
       flex-direction: column;
       text-align: center;
     }
 
-    .iit-madras-page .college-image {
+    .college-image {
       margin-right: 0;
       margin-bottom: 20px;
     }
 
-    .iit-madras-page .course {
+    .course {
       width: 100%;
     }
   }

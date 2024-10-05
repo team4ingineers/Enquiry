@@ -8,7 +8,6 @@ class Student(models.Model):
     def __str__(self):
         return self.user.username
 
-
 class Enquiry(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
@@ -25,6 +24,8 @@ class Enquiry(models.Model):
 
     def __str__(self):
         return f"Enquiry from {self.student.user.username} to {self.college.user.username}"
+
+
         
         
         
