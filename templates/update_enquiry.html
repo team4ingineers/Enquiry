@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Update Enquiry from {{ enquiry.student.user.username }}</h2>
+  <p>Message: {{ enquiry.message }}</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <label for="status">Status:</label>
+    <select name="status">
+      <option value="PENDING" {% if enquiry.status == 'PENDING' %}selected{% endif %}>Pending</option>
+      <option value="ACCEPTED" {% if enquiry.status == 'ACCEPTED' %}selected{% endif %}>Accepted</option>
+      <option value="REJECTED" {% if enquiry.status == 'REJECTED' %}selected{% endif %}>Rejected</option>
+    </select>
+
+    <label for="response">Response:</label>
+    <textarea name="response">{{ enquiry.response }}</textarea>
+
+    <button type="submit">Update Enquiry</button>
+  </form>
+{% endblock %}

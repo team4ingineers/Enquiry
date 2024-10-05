@@ -33,7 +33,7 @@ def send_enquiry(request):
     else:
         form = EnquiryForm()
 
-    return render(request, 'student/send_enquiry.html', {'form': form})
+    return render(request, 'send_enquiry.html', {'form': form})
 
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
@@ -43,7 +43,7 @@ from .models import Student
 from django.urls import reverse
 
 class StudentLoginView(LoginView):
-    template_name = 'student/student_login.html'
+    template_name = 'student_login.html'
 
     def get_success_url(self):
         # Return the URL string using reverse
@@ -226,13 +226,14 @@ def college_tour(request, id):  # Ensure id is in the function definition
 
 def colleges(request):
     all_colleges = College.objects.all()
+    print(all_colleges)  # This will print the QuerySet in the console
     return render(request, 'colleges.html', {'colleges': all_colleges})
 
 
 def enquires(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
-    return render(request, 'student/student_enquires.html', {'enquiries': enquiries, 'user_type': 'Student'})
+    return render(request, 'student_enquires.html', {'enquiries': enquiries, 'user_type': 'Student'})
 
 def airecommendation(request):
     return render(request, 'gemini.html')

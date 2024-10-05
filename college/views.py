@@ -28,7 +28,7 @@ from .models import College
 from django.urls import reverse
 
 class CollegeLoginView(LoginView):
-    template_name = 'college/college_login.html'
+    template_name = 'college_login.html'
 
     def get_success_url(self):
         # Redirect to college dashboard after successful login
@@ -39,7 +39,7 @@ def college_dashboard_view(request):
     college = College.objects.get(user=request.user)
     enquiries = college.enquiry_set.all()  # Retrieve all enquiries made for this college
     enquiries.update(seen_by_college=True)  # Mark them as seen
-    return render(request, 'college/college_dashboard.html', {'enquiries': enquiries, 'user_type': 'College'})
+    return render(request, 'college_dashboard.html', {'enquiries': enquiries, 'user_type': 'College'})
 
 
 
@@ -54,7 +54,7 @@ def update_enquiry_status(request, enquiry_id):
         enquiry.save()
         return redirect('college_dashboard')
 
-    return render(request, 'college/update_enquiry.html', {'enquiry': enquiry})
+    return render(request, 'update_enquiry.html', {'enquiry': enquiry})
 
 
 
