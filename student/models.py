@@ -7,7 +7,7 @@ class Student(models.Model):
     def __str__(self):
         return self.user.username
 
-        class CollegeTour(models.Model):
+class CollegeTour(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(upload_to='tours/')
