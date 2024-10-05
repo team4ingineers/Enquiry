@@ -7,10 +7,10 @@ urlpatterns = [
     path('send_enquiry/', send_enquiry, name='send_enquiry'),
     path('student_dashboard/', student_dashboard_view, name='student_dashboard'),
     path('tour/<int:id>/', college_tour, name='college_tour'),
-    path('aibot/', get_college_recommendations, name='college_recommendation'),
+    path('college-search/', college_search, name='college_search'),
     path('colleges/', colleges , name = 'colleges'),
     path('enquires/', enquires , name = 'enquires'),
-    path('airecommendation/', airecommendation, name = 'airecommendation'),
+    
     path('login/', StudentLoginView.as_view(), name='student_login'),
     path('student_dashboard', student_dashboard_view, name='student_dashboard_view'),
     path('tour/<int:id>/', college_tour, name='college_tour'),

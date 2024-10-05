@@ -5,7 +5,7 @@
 <div class="enquiries-container">
   {% for enquiry in enquiries %}
     {% if enquiry.status == 'ACCEPTED' or enquiry.status == 'PENDING' %}
-      <a href="{% url 'enquiry_detail' enquiry.id %}" class="enquiry-link">
+      <a href="{% url 'enquiry_detail' enquiry.id %}" class="enquiry-link" style="color: black;">
         <div class="enquiry-box">
           <p><strong>Enquiry to:</strong> {{ enquiry.college.user.username }}</p>
           <p><strong>Message:</strong> {{ enquiry.message }}</p>
@@ -33,6 +33,7 @@
     background-color: #f9f9f9;
     border: 1px solid #ccc;
     border-radius: 10px;
+    width: 400px;
     padding: 20px;
     flex: 1 1 calc(33.333% - 20px); /* 3 columns in a row with spacing */
     max-width: 400px; /* To prevent too large boxes */
