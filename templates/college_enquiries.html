@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>All Enquiries for {{ request.user.college.name }}</h1>
+
+  {% if enquiries %}
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Message</th>
+          <th>Status</th>
+          <th>Response</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for enquiry in enquiries %}
+          <tr>
+            <td>{{ enquiry.student.user.username }}</td>
+            <td>{{ enquiry.message }}</td>
+            <td>{{ enquiry.get_status_display }}</td>
+            <td>{{ enquiry.response|default:"No response yet" }}</td>
+            <td>
+              <a href="{% url 'update_enquiry_status' enquiry.id %}">Update</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No enquiries yet.</p>
+  {% endif %}
+
+  <a href="{% url 'college_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+      text-align: left;
+    }
+    tr:hover { background-color: #f1f1f1; }
+  </style>
+{% endblock %}

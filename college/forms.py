@@ -14,3 +14,17 @@ class CollegeSignUpForm(UserCreationForm):
             user.save()
             College.objects.create(user=user)
         return user
+    
+from django import forms
+from student.models import Meeting
+
+
+class MeetingForm(forms.ModelForm):
+    class Meta:
+        model = Meeting
+        fields = ['meeting_date', 'meeting_time', 'description']  # Add other fields as needed
+        widgets = {
+            'meeting_date': forms.DateInput(attrs={'type': 'date'}),
+            'meeting_time': forms.TimeInput(attrs={'type': 'time'}),
+        }
+

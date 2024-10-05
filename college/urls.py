@@ -9,5 +9,9 @@ urlpatterns = [
     path('mail/', upload_mail, name='mail'),
     path('download-excel-template/', download_excel_template, name='download_excel_template'),
     path('meetings/', college_meetings, name='college_meetings'),
-    path('college/meetings/update/<int:id>/', update_meeting_status, name='update_meeting_status'),
+    path('meetings/update/<int:id>/', update_meeting_status, name='update_meeting_status'),
+    path('students-enquired/', college_students_enquired, name='college_students_enquired'),
+    path('students-enquired/<int:student_id>/', college_student_enquiries, name='college_student_enquiries'),
+    path('enquiries/', college_enquiries_view, name='college_enquiries'),
+    path('schedule-meeting/<int:enquiry_id>/', schedule_meeting_view, name='schedule_meeting'),
 ]
