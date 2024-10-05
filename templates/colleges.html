@@ -22,10 +22,11 @@
 <h1 class="colleges-title">List of Colleges</h1> <!-- Changed class for targeting in CSS -->
 <div class="colleges-container">
   {% for college in colleges %}
+  
     <div class="college-box">
       <div class="college-image">
-        <!-- Use the college's image URL -->
-        <img src="{{ college.image_url }}" alt="{{ college.user.username }}" />
+        <a href="/student/iitmadras/">
+        <img src="{{ college.image_url }}" alt="{{ college.user.username }}" /></a>
       </div>
       <div class="college-info">
         <h2>{{ college.user.username }}</h2>
