@@ -1,0 +1,74 @@
+{% extends 'studentbase.html' %}
+
+{% block content %}
+<h3>Your Enquiries</h3>
+<div class="enquiries-container">
+  {% for enquiry in enquiries %}
+    {% if enquiry.status == 'CLOSED'%}
+      <div class="enquiry-box">
+        <p><strong>Enquiry to:</strong> {{ enquiry.college.user.username }}</p>
+        <p><strong>Message:</strong> {{ enquiry.message }}</p>
+        <p><strong>Status:</strong> {{ enquiry.status }}</p>
+        <p><strong>Seen by College:</strong> {{ enquiry.seen_by_college }}</p>
+        <p><strong>Response:</strong> {{ enquiry.response|default:"No response yet" }}</p>
+      </div>
+    {% endif %}
+  {% empty %}
+    <p>You have not made any enquiries yet.</p>
+  {% endfor %}
+</div>
+
+<style>
+  .enquiries-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between boxes */
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .enquiry-box {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    flex: 1 1 calc(33.333% - 20px); /* 3 columns in a row with spacing */
+    max-width: 400px; /* To prevent too large boxes */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .enquiry-box:hover {
+    transform: translateY(-5px);
+  }
+
+  .enquiry-box p {
+    margin: 0 0 10px;
+    font-size: 16px;
+  }
+
+  h3 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 1200px) {
+    .enquiry-box {
+      flex: 1 1 calc(50% - 20px); /* 2 columns in a row for medium screens */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .enquiry-box {
+      flex: 1 1 100%; /* 1 column for small screens */
+    }
+  }
+
+  /* Remove gap when only 2 items are present */
+  .enquiries-container > .enquiry-box:nth-last-child(2):nth-child(odd) {
+    flex: 1 1 calc(50%); /* Full width of row when 2 items are present */
+  }
+</style>
+{% endblock %}

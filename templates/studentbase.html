@@ -68,7 +68,7 @@
         </li>
         
         
-        <li class="{% if request.path == '/student/enquires/' %}active{% endif %}">
+        <li class="{% if request.path == '/student/closedenquiry/' %}active{% endif %}{% if request.path == '/student/studentactiveenquires/' %}active{% endif %}{% if request.path == '/student/send_enquiry/' %}active{% endif %}{% if request.path == '/student/enquires/' %}active{% endif %}">
             <a href="/student/enquires/">
                 <i class='bx bxs-message-dots'></i>
                 <span class="text">Enquires</span>

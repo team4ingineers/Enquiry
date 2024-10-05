@@ -418,10 +418,13 @@ def complete_profile(request):
 
     return render(request, 'complete_profile.html', {'form': form})
 
+def studentactiveenquires(request):
+    return render(request, 'studentactiveenquires.html')
 
 
 
 
+<<<<<<< HEAD
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Student
@@ -436,3 +439,15 @@ def student_dashboard_view(request):
     
     # Your existing dashboard logic goes here
     return render(request, 'student_dashboard.html', {'student': student})
+=======
+def studentactiveenquires(request):
+    student = Student.objects.get(user=request.user)
+    enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
+    return render(request, 'studentactiveenquires.html', {'enquiries': enquiries, 'user_type': 'Student'})
+
+
+def closedenquiry(request):
+    student = Student.objects.get(user=request.user)
+    enquiries = student.enquiry_set.all() 
+    return render(request, 'closedenquiry.html',{'enquiries': enquiries, 'user_type': 'Student'})
+>>>>>>> 5afd96a3ae01cb52ed7638cd32255edada1c6dc8
