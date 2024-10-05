@@ -10,7 +10,7 @@
     <select name="status">
       <option value="PENDING" {% if enquiry.status == 'PENDING' %}selected{% endif %}>Pending</option>
       <option value="ACCEPTED" {% if enquiry.status == 'ACCEPTED' %}selected{% endif %}>Accepted</option>
-      <option value="REJECTED" {% if enquiry.status == 'REJECTED' %}selected{% endif %}>Rejected</option>
+      <option value="CLOSED" {% if enquiry.status == 'CLOSED' %}selected{% endif %}>CLOSED</option>
     </select>
 
     <label for="response">Response:</label>
