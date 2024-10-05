@@ -1,0 +1,29 @@
+<h1>Schedule a Meeting</h1>
+
+<div class="schedule-form">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Renders the form fields in paragraph format -->
+        <button type="submit" class="btn btn-primary">Schedule</button>
+        <a href="{% url 'enquiry_detail' enquiry.id %}" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div>
+
+<!-- Optional: Add some styles -->
+<style>
+    .schedule-form {
+        max-width: 500px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .schedule-form form {
+        display: flex;
+        flex-direction: column;
+    }
+    .schedule-form .btn {
+        margin-top: 15px;
+    }
+</style>
