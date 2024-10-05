@@ -424,7 +424,6 @@ def studentactiveenquires(request):
 
 
 
-<<<<<<< HEAD
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Student
@@ -439,7 +438,6 @@ def student_dashboard_view(request):
     
     # Your existing dashboard logic goes here
     return render(request, 'student_dashboard.html', {'student': student})
-=======
 def studentactiveenquires(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
@@ -450,4 +448,135 @@ def closedenquiry(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all() 
     return render(request, 'closedenquiry.html',{'enquiries': enquiries, 'user_type': 'Student'})
->>>>>>> 5afd96a3ae01cb52ed7638cd32255edada1c6dc8
+
+
+# from django.shortcuts import render, get_object_or_404, redirect
+# from .models import CollegeHealthScore, StudentFeedback
+# from college.models import College
+
+# def health_score_list(request):
+#     health_scores = CollegeHealthScore.objects.all().order_by('-health_score')
+#     return render(request, 'health_score_list.html', {'health_scores': health_scores})
+
+# def college_health_details(request, college_id):
+#     college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
+#     return render(request, 'college_health_details.html', {'college_health': college_health})
+
+# from django.shortcuts import render, get_object_or_404, redirect
+# from .models import CollegeHealthScore, StudentFeedback
+# from college.models import College
+# from django.contrib import messages  # Import messages framework
+
+# @login_required
+# def submit_feedback(request, college_id):
+#     college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
+
+#     feedback_type = request.POST.get('feedback_type')  # 'Agree' or 'Disagree'
+
+#     # Check if feedback already exists for this user and college
+#     existing_feedback = StudentFeedback.objects.filter(student=request.user, college_health_score=college_health).first()
+
+#     if existing_feedback:
+#         messages.warning(request, "You have already submitted feedback for this college.")
+#     else:
+#         # Create StudentFeedback entry
+#         StudentFeedback.objects.create(student=request.user, college_health_score=college_health, feedback_type=feedback_type)
+#         messages.success(request, "Thank you for your feedback!")
+    
+#     return redirect('college_health_details', college_id=college_id)
+
+
+
+
+
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .models import CollegeHealthScore, StudentFeedback
+from college.models import College
+
+# Load environment variables and configure the Gemini API
+load_dotenv()
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 64,
+    "max_output_tokens": 8192,
+}
+
+def college_health_details(request, college_id):
+    college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
+
+    # Generate health score description using Gemini model
+    user_input = (
+        f"Generate a health score percentage and description for the college named '{college_health.college.user.username}'. "
+        f"Highlight its academic performance, student satisfaction, placement opportunities, and NIRF and NAAC rankings, store the health score in a variable "
+    )
+
+    try:
+        model = genai.GenerativeModel(
+            model_name="gemini-1.0-pro",
+            generation_config=generation_config,
+        )
+
+        chat_session = model.start_chat(history=[])
+        response = chat_session.send_message(user_input)
+        gemini_health_score = response.text
+    except Exception as e:
+        gemini_health_score = f"An error occurred: {str(e)}"
+
+    # Calculate feedback percentages
+    total_feedback = college_health.number_of_agreements + college_health.number_of_disagreements
+    if total_feedback > 0:
+        agreement_percentage = (college_health.number_of_agreements / total_feedback) * 100
+        disagreement_percentage = (college_health.number_of_disagreements / total_feedback) * 100
+    else:
+        agreement_percentage = 0
+        disagreement_percentage = 0
+
+    return render(request, 'college_health_details.html', {
+        'college_health': college_health,
+        'gemini_health_score': gemini_health_score,
+        'agreement_percentage': round(agreement_percentage, 2),
+        'disagreement_percentage': round(disagreement_percentage, 2),
+    })
+
+
+
+@login_required
+def submit_feedback(request, college_id):
+    college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
+    feedback_type = request.POST.get('feedback_type')  # 'Agree' or 'Disagree'
+
+    # Check if feedback already exists for this user and college
+    existing_feedback = StudentFeedback.objects.filter(student=request.user, college_health_score=college_health).first()
+
+    if existing_feedback:
+        messages.warning(request, "You have already submitted feedback for this college.")
+    else:
+        # Create StudentFeedback entry
+        StudentFeedback.objects.create(student=request.user, college_health_score=college_health, feedback_type=feedback_type)
+        messages.success(request, "Thank you for your feedback!")
+    
+    return redirect('college_health_details', college_id=college_id)
+
+from django.shortcuts import render
+from .models import CollegeHealthScore
+
+def health_score_list(request):
+    health_scores = CollegeHealthScore.objects.all().order_by('-health_score')
+    
+    if not health_scores:  # Check if there are no health scores available
+        message = "No health scores available at the moment."
+    else:
+        message = None  # Reset message if health scores are present
+
+    return render(request, 'health_score_list.html', {
+        'health_scores': health_scores,
+        'message': message  # Pass the message to the template
+    })

@@ -6,5 +6,5 @@ from .models import College
 
 @admin.register(College)
 class CollegeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'established_year', 'type', 'location', 'campus_area', 'established_by', 'nirf_ranking', 'total_departments', 'admission_criteria', 'top_courses', 'official_website')
+    list_display = ('user', 'type', 'location', 'campus_area', 'established_by', 'nirf_ranking', 'total_departments', 'admission_criteria', 'top_courses', 'official_website')
     search_fields = ('user__username', 'location', 'type')
