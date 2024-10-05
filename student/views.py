@@ -187,6 +187,8 @@ def college_search(request):
         location = request.POST.get("location", "")
         course = request.POST.get("course", "")
         budget = int(request.POST.get("budget", ""))
+        marks = int(request.POST.get("marks", ""))
+        address = request.POST.get("address", "")
         special_requirements = request.POST.get("special_requirements", "")
 
         # Process latitude, longitude if provided for current location
@@ -201,7 +203,7 @@ def college_search(request):
             # Fallback to AI model if no pre-defined matches
             user_input = f"""
             Suggest engineering colleges in Mumbai for a student with:
-            Name: {student_name}
+            Name: {name}
             Marks: {marks}
             Address: {address}
             Location: {location}
@@ -220,8 +222,6 @@ def college_search(request):
             chat_session = model.start_chat(history=[])
             response = chat_session.send_message(user_input)
             response_text = response.text
-        except Exception as e:
-            response_text = f"An error occurred: {str(e)}"
 
     context = {'response': response_text}
     return render(request, 'gemini.html',context)
@@ -426,7 +426,6 @@ def studentactiveenquires(request):
 
 
 
-<<<<<<< HEAD
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Student
@@ -441,7 +440,6 @@ def student_dashboard_view(request):
     
     # Your existing dashboard logic goes here
     return render(request, 'student_dashboard.html', {'student': student})
-=======
 def studentactiveenquires(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all()  # Retrieve all enquiries made by the student
@@ -452,7 +450,6 @@ def closedenquiry(request):
     student = Student.objects.get(user=request.user)
     enquiries = student.enquiry_set.all() 
     return render(request, 'closedenquiry.html',{'enquiries': enquiries, 'user_type': 'Student'})
->>>>>>> 5afd96a3ae01cb52ed7638cd32255edada1c6dc8
 
 
 def enquiry_detail(request, id):
