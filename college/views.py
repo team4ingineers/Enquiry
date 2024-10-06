@@ -418,6 +418,83 @@ def format_response(response_text):
     return "\n".join(formatted_lines)
 
 
+
+from django.shortcuts import render, get_object_or_404
+from student.models import Student, Stage  # Import models from student app
+from django.http import JsonResponse
+import json
+
+# Display students in various stages
+def manage_students(request):
+    enquired_students = Stage.objects.filter(current_stage='Enquired')
+    admission_students = Stage.objects.filter(current_stage='Admission')
+    counseling_students = Stage.objects.filter(current_stage='Counseling')
+
+    context = {
+        'enquired_students': enquired_students,
+        'admission_students': admission_students,
+        'counseling_students': counseling_students,
+    }
+    return render(request, 'manage_students.html', context)
+
+# Handle AJAX request to update student's stage
+def update_stage(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        student_id = data.get('student_id')
+        new_stage = data.get('new_stage').capitalize()
+
+        student = get_object_or_404(Student, id=student_id)
+        stage = get_object_or_404(Stage, student=student)
+        
+        # Update the student's stage
+        stage.current_stage = new_stage
+        stage.save()
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False}, status=400)
+
+
+
+
+
+from django.shortcuts import render
+from student.models import Meeting
+from django.utils import timezone
+from django.db.models import Q
+
+def meeting_list(request):
+    # Get current date and time
+    now = timezone.now()
+
+    # Define upcoming meetings
+    upcoming_meetings = Meeting.objects.filter(
+        Q(meeting_date__gt=now.date()) |
+        (Q(meeting_date=now.date()) & Q(meeting_time__gt=now.time()))
+    ).order_by('meeting_date', 'meeting_time')
+
+    # Fetch past meetings
+    past_meetings = Meeting.objects.filter(
+        Q(meeting_date__lt=now.date()) |
+        (Q(meeting_date=now.date()) & Q(meeting_time__lt=now.time()))
+    ).order_by('-meeting_date', '-meeting_time')
+
+    context = {
+        'upcoming_meetings': upcoming_meetings,
+        'past_meetings': past_meetings,
+    }
+    
+    return render(request, 'meeting_list.html', context)
+
+from django.shortcuts import redirect
+
+# View to start the meeting
+def start_meeting(request):
+    # Redirect back to the meetings list after starting the meeting
+    return render(request,'video_chat.html')
+
+
 from django.shortcuts import render
 
 def analytics(request):

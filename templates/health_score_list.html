@@ -1,13 +1,91 @@
-{% if health_scores %}
-    <ul>
-    {% for health_score in health_scores %}
-        <li>
-            <a href="{% url 'college_health_details' health_score.college.id %}">
-                {{ health_score.college.user.username }} - Health Score: {{ health_score.health_score }}
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No health scores available at the moment.</p>
-{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Scores of Colleges</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        body {
+            background-color: #f4f6f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2.5em;
+            color: #0056b3; /* Slightly darker blue */
+            animation: fadeIn 1s ease;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto; /* Center the container */
+            padding: 20px;
+            display: grid; /* Use grid for layout */
+            grid-template-columns: repeat(3, 1fr); /* 3 boxes per row */
+            gap: 20px; /* Space between boxes */
+        }
+
+        .college-card {
+            background-color: #ffffff; /* White background for cards */
+            border-radius: 12px; /* Rounded corners */
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Shadow effect */
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .college-card:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+        }
+
+        a {
+            text-decoration: none;
+            color: #0056b3; /* Link color */
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr); /* 2 boxes per row on smaller screens */
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                grid-template-columns: 1fr; /* 1 box per row on very small screens */
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Health Scores of Colleges</h1>
+
+    <div class="container">
+        {% if health_scores %}
+            {% for health_score in health_scores %}
+            <div class="college-card">
+                <a href="{% url 'college_health_details' health_score.college.id %}">{{ health_score.college.user.username }}</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="college-card" style="text-align:center;">No health scores available at the moment.</div>
+        {% endif %}
+    </div>
+
+</body>
+
+</html>

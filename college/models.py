@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class College(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Linking college to a user (admin/representative)
-    # established_year = models.PositiveIntegerField()
+    established_year = models.PositiveIntegerField()
     type = models.CharField(max_length=50, choices=[('Public', 'Public'), ('Private', 'Private')])
     location = models.CharField(max_length=255)
     campus_area = models.DecimalField(max_digits=6, decimal_places=2)  # In acres

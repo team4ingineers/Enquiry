@@ -339,200 +339,13 @@ def closedenquiry(request):
     return render(request, 'closedenquiry.html',{'enquiries': enquiries, 'user_type': 'Student'})
 
 
-# from django.shortcuts import render, get_object_or_404, redirect
-# from .models import CollegeHealthScore, StudentFeedback
-# from college.models import College
-
-# def health_score_list(request):
-#     health_scores = CollegeHealthScore.objects.all().order_by('-health_score')
-#     return render(request, 'health_score_list.html', {'health_scores': health_scores})
-
-# def college_health_details(request, college_id):
-#     college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
-#     return render(request, 'college_health_details.html', {'college_health': college_health})
-
-# from django.shortcuts import render, get_object_or_404, redirect
-# from .models import CollegeHealthScore, StudentFeedback
-# from college.models import College
-# from django.contrib import messages  # Import messages framework
-
-# @login_required
-# def submit_feedback(request, college_id):
-#     college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
-
-#     feedback_type = request.POST.get('feedback_type')  # 'Agree' or 'Disagree'
-
-#     # Check if feedback already exists for this user and college
-#     existing_feedback = StudentFeedback.objects.filter(student=request.user, college_health_score=college_health).first()
-
-#     if existing_feedback:
-#         messages.warning(request, "You have already submitted feedback for this college.")
-#     else:
-#         # Create StudentFeedback entry
-#         StudentFeedback.objects.create(student=request.user, college_health_score=college_health, feedback_type=feedback_type)
-#         messages.success(request, "Thank you for your feedback!")
-    
-#     return redirect('college_health_details', college_id=college_id)
 
 
 
 
 
-import os
-from dotenv import load_dotenv
-import google.generativeai as genai
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from .models import CollegeHealthScore, StudentFeedback
-from college.models import College
-
-# Load environment variables and configure the Gemini API
-load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 64,
-    "max_output_tokens": 8192,
-}
-
-def college_health_details(request, college_id):
-    college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
-
-    # Generate health score description using Gemini model
-    user_input = (
-        f"Generate a health score percentage and description for the college named '{college_health.college.user.username}'. "
-        f"Highlight its academic performance, student satisfaction, placement opportunities, and NIRF and NAAC rankings, store the health score in a variable "
-    )
-
-    try:
-        model = genai.GenerativeModel(
-            model_name="gemini-1.0-pro",
-            generation_config=generation_config,
-        )
-
-        chat_session = model.start_chat(history=[])
-        response = chat_session.send_message(user_input)
-        gemini_health_score = response.text
-    except Exception as e:
-        gemini_health_score = f"An error occurred: {str(e)}"
-
-    # Calculate feedback percentages
-    total_feedback = college_health.number_of_agreements + college_health.number_of_disagreements
-    if total_feedback > 0:
-        agreement_percentage = (college_health.number_of_agreements / total_feedback) * 100
-        disagreement_percentage = (college_health.number_of_disagreements / total_feedback) * 100
-    else:
-        agreement_percentage = 0
-        disagreement_percentage = 0
-
-    return render(request, 'college_health_details.html', {
-        'college_health': college_health,
-        'gemini_health_score': gemini_health_score,
-        'agreement_percentage': round(agreement_percentage, 2),
-        'disagreement_percentage': round(disagreement_percentage, 2),
-    })
-
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import CollegeHealthScore, StudentFeedback
-from college.models import College
-import google.generativeai as genai
-
-# Configure the Gemini model
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 64,
-    "max_output_tokens": 8192,
-}
-
-def college_health_details(request, college_id):
-    college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
-
-    # Initialize variables for Gemini API response
-    health_score_description = ""
-    gemini_health_score = ""
-
-    user_input = (
-        f"Generate a health score percentage and a detailed description for the college '{college_health.college.user.username}'. "
-        f"Consider academic performance, student satisfaction, placement opportunities."
-        f"use and gieNIRF and NAAC Rankings, internet feedbacks and information"
-    )
-
-    try:
-        model = genai.GenerativeModel(
-            model_name="gemini-1.0-pro",
-            generation_config=generation_config,
-        )
-
-        chat_session = model.start_chat(history=[])
-        response = chat_session.send_message(user_input)
-
-        # Extract the health score and description from the Gemini response
-        response_text = response.text
-        # Assume the first line of response contains the health score like "Health Score: 85/100"
-        gemini_health_score = response_text.splitlines()[0]  # Extract the first line as health score
-        health_score_description = "\n".join(response_text.splitlines()[1:])  # Rest of the text as description
-    except Exception as e:
-        health_score_description = f"An error occurred: {str(e)}"
-        gemini_health_score = "N/A"
-
-    # Calculate feedback percentages
-    total_feedback = college_health.number_of_agreements + college_health.number_of_disagreements
-    if total_feedback > 0:
-        agreement_percentage = (college_health.number_of_agreements / total_feedback) * 100
-        disagreement_percentage = (college_health.number_of_disagreements / total_feedback) * 100
-    else:
-        agreement_percentage = 0
-        disagreement_percentage = 0
-
-    return render(request, 'college_health_details.html', {
-        'college_health': college_health,
-        'gemini_health_score': gemini_health_score,  # Pass the Gemini health score
-        'health_score_description': health_score_description,  # Pass the Gemini description
-        'agreement_percentage': round(agreement_percentage, 2),
-        'disagreement_percentage': round(disagreement_percentage, 2),
-    })
 
 
-
-
-@login_required
-def submit_feedback(request, college_id):
-    college_health = get_object_or_404(CollegeHealthScore, college__id=college_id)
-    feedback_type = request.POST.get('feedback_type')  # 'Agree' or 'Disagree'
-
-    # Check if feedback already exists for this user and college
-    existing_feedback = StudentFeedback.objects.filter(student=request.user, college_health_score=college_health).first()
-
-    if existing_feedback:
-        messages.warning(request, "You have already submitted feedback for this college.")
-    else:
-        # Create StudentFeedback entry
-        StudentFeedback.objects.create(student=request.user, college_health_score=college_health, feedback_type=feedback_type)
-        messages.success(request, "Thank you for your feedback!")
-    
-    return redirect('college_health_details', college_id=college_id)
-
-from django.shortcuts import render
-from .models import CollegeHealthScore
-
-def health_score_list(request):
-    health_scores = CollegeHealthScore.objects.all().order_by('-health_score')
-    
-    if not health_scores:  # Check if there are no health scores available
-        message = "No health scores available at the moment."
-    else:
-        message = None  # Reset message if health scores are present
-
-    return render(request, 'health_score_list.html', {
-        'health_scores': health_scores,
-        'message': message  # Pass the message to the template
-    })
 
 
 def enquiry_detail(request, id):
@@ -565,6 +378,138 @@ def schedule_meeting(request, id):
 
     return render(request, 'schedule_meeting.html', {'form': form, 'enquiry': enquiry})
 
+
+
+
+
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import HealthScore, StudentFeedback
+
+@login_required
+def submit_feedback(request, college_id):
+    if request.method == 'POST':
+        college_health = get_object_or_404(HealthScore, college__id=college_id)
+        feedback_type = request.POST.get('feedback_type')
+
+        # Check if the user has submitted feedback for this college
+        existing_feedback = StudentFeedback.objects.filter(student=request.user, college_health_score=college_health).first()
+
+        if existing_feedback:
+            # If feedback already exists, switch it
+            if existing_feedback.feedback_type == feedback_type:
+                return JsonResponse({'status': 'already_submitted'})  # No change if feedback type is the same
+            
+            # Update counts based on the new feedback type
+            if existing_feedback.feedback_type == 'Agree':
+                college_health.number_of_agreements -= 1  # Decrement the old feedback count
+            else:
+                college_health.number_of_disagreements -= 1  # Decrement the old feedback count
+            
+            # Now increment the new feedback count
+            if feedback_type == 'Agree':
+                college_health.number_of_agreements += 1
+            else:  # feedback_type == 'Disagree'
+                college_health.number_of_disagreements += 1
+            
+            # Update the feedback entry
+            existing_feedback.feedback_type = feedback_type
+            existing_feedback.save()
+        else:
+            # Save the new feedback if it doesn't exist
+            StudentFeedback.objects.create(student=request.user, college_health_score=college_health, feedback_type=feedback_type)
+            
+            if feedback_type == 'Agree':
+                college_health.number_of_agreements += 1
+            else:
+                college_health.number_of_disagreements += 1
+
+        college_health.save()
+
+        # Calculate the new percentages
+        total_feedback = college_health.number_of_agreements + college_health.number_of_disagreements
+        if total_feedback > 0:
+            agreement_percentage = (college_health.number_of_agreements / total_feedback) * 100
+            disagreement_percentage = (college_health.number_of_disagreements / total_feedback) * 100
+        else:
+            agreement_percentage = disagreement_percentage = 0
+
+        # Return the updated counts and percentages
+        return JsonResponse({
+            'status': 'success',
+            'agreement_count': college_health.number_of_agreements,
+            'disagreement_count': college_health.number_of_disagreements,
+            'agreement_percentage': round(agreement_percentage, 2),
+            'disagreement_percentage': round(disagreement_percentage, 2)
+        })
+
+    return JsonResponse({'status': 'error'})
+
+
+
+
+
+
+
+from django.shortcuts import render, get_object_or_404
+from student.models import HealthScore, StudentFeedback
+from college.models import College
+
+
+def college_health_details(request, college_id):
+    college_health = get_object_or_404(HealthScore, college__id=college_id)
+
+    # Gemini API request
+    user_input = (
+        f"Generate a health score percentage (always give the same for that college) and description for the college '{college_health.college.user.username}'. "
+        "Consider academic performance, student satisfaction, placement opportunities. "
+        "Consider and show NIRF and NAAC rankings, use internet data and feedback. "
+        "Don't give too big paragraph give small para and values more like grading and statements."
+    )
+    
+    health_score_description = ""
+    gemini_health_score = ""
+
+    try:
+        model = genai.GenerativeModel(model_name="gemini-1.0-pro")
+        chat_session = model.start_chat(history=[])
+        response = chat_session.send_message(user_input)
+        response_text = response.text
+
+        # Split the response to get the score and description
+        gemini_health_score = response_text.splitlines()[0]
+        health_score_description = "\n".join(response_text.splitlines()[1:])
+
+        # Remove asterisks from gemini_health_score
+        gemini_health_score = gemini_health_score.replace('*', '').strip()  # Clean up the health score
+    except Exception as e:
+        gemini_health_score = "N/A"
+        health_score_description = f"An error occurred: {str(e)}"
+
+    # Calculate student feedback percentages
+    total_feedback = college_health.number_of_agreements + college_health.number_of_disagreements
+    if total_feedback > 0:
+        agreement_percentage = (college_health.number_of_agreements / total_feedback) * 100
+        disagreement_percentage = (college_health.number_of_disagreements / total_feedback) * 100
+    else:
+        agreement_percentage = disagreement_percentage = 0
+
+    return render(request, 'college_health_details.html', {
+        'college_health': college_health,
+        'gemini_health_score': gemini_health_score,
+        'health_score_description': health_score_description,
+        'agreement_percentage': round(agreement_percentage, 2),
+        'disagreement_percentage': round(disagreement_percentage, 2),
+    })
+
+
+from django.shortcuts import render
+from student.models import HealthScore
+
+def health_score_list(request):
+    health_scores = HealthScore.objects.all().order_by('-health_score')  # Sorting by highest health score first
+    return render(request, 'health_score_list.html', {'health_scores': health_scores})
 
 def tools(request):
     return render(request, 'tools.html')
