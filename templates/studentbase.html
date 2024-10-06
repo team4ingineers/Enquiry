@@ -69,10 +69,10 @@
                     <span class="text">Enquires</span>
                 </a>
             </li>
-            <li class="{% if request.path == '/student/health-scores/' %}active{% endif %}">
+            <li class="{% if request.path == '/student/college/1/' %}active{% endif %}{% if request.path == '/student/health-scores/' %}active{% endif %}">
                 <a href="/student/health-scores/">
                     <i class='bx bxs-doughnut-chart'></i>
-                    <span class="text">Ai Helper </span>
+                    <span class="text">College Health Score </span>
                 </a>
             </li>
             <li class="{% if request.path == '/student/college-search/' %}active{% endif %}">
