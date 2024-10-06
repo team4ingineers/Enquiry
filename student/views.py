@@ -494,7 +494,7 @@ def college_health_details(request, college_id):
 
         # Additional formatting if required
         health_score_description = health_score_description.replace("\n\n", "\n")  # Remove extra newlines
-        health_score_description = health_score_description.replace("", "<strong>").replace("", "</strong>")  # Add strong tags
+        health_score_description = health_score_description.replace("**", "<strong>").replace("**", "</strong>")  # Add strong tags
     except Exception as e:
         gemini_health_score = "N/A"
         health_score_description = f"An error occurred: {str(e)}"
