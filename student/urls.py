@@ -38,6 +38,7 @@ urlpatterns = [
     path('tools/',tools,name='tools'),
     path('college_tour/', college_tour, name='college_tour'),
     path('student/compare/',compare,name='compare'),
+    path('iitgroup/',iitgroup,name='iitgroup'),
 ]
 
 

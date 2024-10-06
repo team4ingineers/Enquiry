@@ -15,6 +15,7 @@
                         <th>Username</th>
                         <th>Email</th>
                         <th>Enquiries</th>
+                        <th>Action</th> <!-- New column for the common button -->
                     </tr>
                 </thead>
                 <tbody>
@@ -23,9 +24,16 @@
                             <td>{{ student.user.get_full_name }}</td>
                             <td>{{ student.user.username }}</td>
                             <td>{{ student.user.email }}</td>
+                            
                             <td>
                                 <a href="{% url 'college_student_enquiries' student.id %}" class="btn btn-action">
                                     View Enquiries
+                                </a>
+                            </td>
+                            <!-- New button -->
+                            <td>
+                                <a href="/college/onetone/" class="btn btn-action">
+                                    Send Message
                                 </a>
                             </td>
                         </tr>

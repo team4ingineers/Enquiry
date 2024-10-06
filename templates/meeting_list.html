@@ -1,95 +1,138 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meetings List</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .btn {
-            padding: 8px 12px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="meetings-dashboard">
     <h1>Upcoming Meetings</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Enquiry</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for meeting in upcoming_meetings %}
+    <div class="table-container">
+        <table class="meetings-table">
+            <thead>
                 <tr>
-                    <td>{{ meeting.enquiry }}</td>
-                    <td>{{ meeting.meeting_date }}</td>
-                    <td>{{ meeting.meeting_time }}</td>
-                    <td>{{ meeting.description|default:"No description provided" }}</td>
-                    <td>{{ meeting.get_status_display }}</td>
-                    <td>
-                        <a href="/college/start_meeting/" class="btn">Start Meeting</a>
-                    </td>
+                    <th>Enquiry</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Action</th>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="6">No upcoming meetings.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for meeting in upcoming_meetings %}
+                    <tr>
+                        <td>{{ meeting.enquiry }}</td>
+                        <td>{{ meeting.meeting_date }}</td>
+                        <td>{{ meeting.meeting_time }}</td>
+                        <td>{{ meeting.description|default:"No description provided" }}</td>
+                        <td>{{ meeting.get_status_display }}</td>
+                        <td>
+                            <a href="/college/start_meeting/" class="btn">Start Meeting</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr class="empty-row">
+                        <td colspan="6">No upcoming meetings.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <h1>Past Meetings</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Enquiry</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Description</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for meeting in past_meetings %}
+    <div class="table-container">
+        <table class="meetings-table">
+            <thead>
                 <tr>
-                    <td>{{ meeting.enquiry }}</td>
-                    <td>{{ meeting.meeting_date }}</td>
-                    <td>{{ meeting.meeting_time }}</td>
-                    <td>{{ meeting.description|default:"No description provided" }}</td>
-                    <td>{{ meeting.get_status_display }}</td>
+                    <th>Enquiry</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Description</th>
+                    <th>Status</th>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5">No past meetings.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+            </thead>
+            <tbody>
+                {% for meeting in past_meetings %}
+                    <tr>
+                        <td>{{ meeting.enquiry }}</td>
+                        <td>{{ meeting.meeting_date }}</td>
+                        <td>{{ meeting.meeting_time }}</td>
+                        <td>{{ meeting.description|default:"No description provided" }}</td>
+                        <td>{{ meeting.get_status_display }}</td>
+                    </tr>
+                {% empty %}
+                    <tr class="empty-row">
+                        <td colspan="5">No past meetings.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    /* Scoped styles specific to the meetings dashboard */
+    .meetings-dashboard {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+    
+    .meetings-dashboard h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    .table-container {
+        margin-bottom: 40px;
+    }
+    
+    .meetings-table {
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .meetings-table th, .meetings-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .meetings-table th {
+        background-color: #f9f9f9;
+        font-weight: bold;
+    }
+    
+    .meetings-table tr:hover {
+        background-color: #f1f1f1;
+    }
+    
+    .meetings-table td {
+        color: #555;
+    }
+    
+    .btn {
+        padding: 10px 15px;
+        background-color: #5dff4b;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s, box-shadow 0.3s;
+        display: inline-block;
+    }
+    
+    .btn:hover {
+        background-color: #d4d4d4;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .empty-row {
+        text-align: center;
+        color: #888;
+        padding: 20px;
+    }
+</style>
+{% endblock %}
