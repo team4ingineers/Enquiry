@@ -379,7 +379,6 @@ def schedule_meeting(request, id):
     return render(request, 'schedule_meeting.html', {'form': form, 'enquiry': enquiry})
 
 
-<<<<<<< HEAD
 
 
 
@@ -512,7 +511,6 @@ def health_score_list(request):
     health_scores = HealthScore.objects.all().order_by('-health_score')  # Sorting by highest health score first
     return render(request, 'health_score_list.html', {'health_scores': health_scores})
 
-=======
 def tools(request):
     return render(request, 'tools.html')
 
@@ -521,5 +519,4 @@ from django.shortcuts import render
 
 def college_tour(request):
     return render(request, 'college_tour.html')
->>>>>>> 782ff8cd15d73ead3391005301853eb81e0b9621
 
