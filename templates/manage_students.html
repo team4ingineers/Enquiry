@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students</title>
+    <style>
+        .stage-box {
+            width: 30%;
+            padding: 20px;
+            border: 1px solid black;
+            min-height: 200px;
+            float: left;
+            margin: 10px;
+        }
+        .student {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage Students</h1>
+
+    <div class="stage-box" id="enquired-box">
+        <h3>Enquired</h3>
+        {% for student in enquired_students %}
+            <div class="student" draggable="true" data-student-id="{{ student.student.id }}">
+                {{ student.student.name }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="stage-box" id="admission-box">
+        <h3>Admission</h3>
+        {% for student in admission_students %}
+            <div class="student" draggable="true" data-student-id="{{ student.student.id }}">
+                {{ student.student.name }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="stage-box" id="counseling-box">
+        <h3>Counseling</h3>
+        {% for student in counseling_students %}
+            <div class="student" draggable="true" data-student-id="{{ student.student.id }}">
+                {{ student.student.name }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const draggables = document.querySelectorAll('.student');
+            const stageBoxes = document.querySelectorAll('.stage-box');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', function (e) {
+                    e.dataTransfer.setData('text', e.target.dataset.studentId);
+                });
+            });
+
+            stageBoxes.forEach(box => {
+                box.addEventListener('dragover', function (e) {
+                    e.preventDefault();
+                });
+
+                box.addEventListener('drop', function (e) {
+                    const studentId = e.dataTransfer.getData('text');
+                    const stageBoxId = e.target.id;
+
+                    const draggedElement = document.querySelector(`.student[data-student-id="${studentId}"]`);
+                    e.target.appendChild(draggedElement);
+
+                    fetch(`/college/update-stage/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({
+                            'student_id': studentId,
+                            'new_stage': stageBoxId.split('-')[0],
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Stage updated successfully', data);
+                    })
+                    .catch(error => console.error('Error updating stage:', error));
+                });
+            });
+        });
+    </script>
+</body>
+</html>

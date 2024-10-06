@@ -4,6 +4,7 @@ from college.models import College
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.user.username
@@ -119,3 +120,19 @@ class Meeting(models.Model):
 
     def __str__(self):
         return f"Meeting for {self.enquiry} on {self.meeting_date} at {self.meeting_time}"
+
+
+
+
+class Stage(models.Model):
+    STAGE_CHOICES = [
+        ('Enquired', 'Enquired'),
+        ('Admission', 'Admission'),
+        ('Counseling', 'Counseling'),
+    ]
+    
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    current_stage = models.CharField(max_length=20, choices=STAGE_CHOICES, default='Enquired')
+
+    def __str__(self):
+        return f"{self.student.name} - {self.current_stage}"

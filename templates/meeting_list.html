@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meetings List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .btn {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upcoming Meetings</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Enquiry</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for meeting in upcoming_meetings %}
+                <tr>
+                    <td>{{ meeting.enquiry }}</td>
+                    <td>{{ meeting.meeting_date }}</td>
+                    <td>{{ meeting.meeting_time }}</td>
+                    <td>{{ meeting.description|default:"No description provided" }}</td>
+                    <td>{{ meeting.get_status_display }}</td>
+                    <td>
+                        <a href="/college/start_meeting/" class="btn">Start Meeting</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">No upcoming meetings.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>Past Meetings</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Enquiry</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Description</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for meeting in past_meetings %}
+                <tr>
+                    <td>{{ meeting.enquiry }}</td>
+                    <td>{{ meeting.meeting_date }}</td>
+                    <td>{{ meeting.meeting_time }}</td>
+                    <td>{{ meeting.description|default:"No description provided" }}</td>
+                    <td>{{ meeting.get_status_display }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No past meetings.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

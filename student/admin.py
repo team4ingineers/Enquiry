@@ -21,3 +21,18 @@ from .models import CollegeHealthScore, StudentFeedback
 
 admin.site.register(CollegeHealthScore)
 admin.site.register(StudentFeedback)
+
+from django.contrib import admin
+from .models import Student, Stage
+
+# Register the Student model
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user')  # Display these fields in the admin list view
+
+admin.site.register(Student, StudentAdmin)
+
+# Register the Stage model
+class StageAdmin(admin.ModelAdmin):
+    list_display = ('student', 'current_stage')  # Display these fields in the admin list view
+
+admin.site.register(Stage, StageAdmin)

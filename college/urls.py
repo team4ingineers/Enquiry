@@ -15,6 +15,9 @@ urlpatterns = [
     path('enquiries/', college_enquiries_view, name='college_enquiries'),
     path('schedule-meeting/<int:enquiry_id>/', schedule_meeting_view, name='schedule_meeting_view'),
     path('approved-rescheduled-meetings/', approved_rescheduled_meetings_view, name='approved_rescheduled_meetings'),
-    
+    path('manage-students/', manage_students, name='manage_students'),
+    path('update-stage/', update_stage, name='update_stage'),
+    path('meetings-list/', meeting_list, name='meeting_list'),
     path('scholarshipai/',scholarshipai,name ='scholarshipai'),
+    path('start_meeting/', start_meeting, name='start_meeting'),
 ]

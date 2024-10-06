@@ -55,6 +55,14 @@
         </li>
 
 
+        <li class="{% if request.path == '/college/meetings-list/' %}active{% endif %}">
+            <a href="/college/meetings-list/">
+                <i class='bx bxs-message-dots'></i>
+                <span class="text">Meetings</span>
+            </a>
+        </li>
+
+
         <li class="{% if request.path == '/college/scholarshipai/' %}active{% endif %}">
             <a href="/college/scholarshipai/">
                 <i class='bx bxs-doughnut-chart'></i>
