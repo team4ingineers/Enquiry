@@ -276,3 +276,61 @@ def schedule_meeting_view(request, enquiry_id):
         'meetings': meetings,
     })
 
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from student.models import Enquiry, Meeting
+from .forms import MeetingForm
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from student.models import Meeting, Enquiry
+from .forms import MeetingForm
+from django.http import JsonResponse
+
+@login_required
+def update_meeting_view(request, meeting_id):
+    meeting = get_object_or_404(Meeting, id=meeting_id)
+    
+    if request.method == 'POST':
+        form = MeetingForm(request.POST, instance=meeting)
+        if form.is_valid():
+            form.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'meeting_id': meeting.id,
+                    'meeting_date': str(meeting.meeting_date),
+                    'meeting_time': str(meeting.meeting_time),
+                    'status': meeting.status,
+                    'student': meeting.enquiry.student.user.username
+                })
+            return redirect('college_meetings')  # Non-AJAX redirect
+    else:
+        form = MeetingForm(instance=meeting)
+
+    # Fetch all meetings associated with the enquiry's college
+    meetings = Meeting.objects.filter(enquiry__college=meeting.enquiry.college)
+
+    return render(request, 'update_meeting.html', {
+        'form': form,
+        'meetings': meetings,  # Pass meetings for the calendar
+    })
+
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from student.models import Meeting
+
+@login_required
+def approved_rescheduled_meetings_view(request):
+    # Fetch all approved and rescheduled meetings for the logged-in user's college
+    meetings = Meeting.objects.filter(
+        enquiry__college=request.user.college,
+        status__in=['APPROVED', 'RESCHEDULED']
+    )
+
+    return render(request, 'approved_rescheduled_meetings.html', {
+        'meetings': meetings,
+    })

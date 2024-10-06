@@ -1,6 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Meeting Status</title>
+    
+    <!-- Include FullCalendar CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.4/fullcalendar.min.css" />
+    <style>
+        form {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        #calendar {
+            margin-top: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+
 <h1>Update Meeting Status</h1>
 
-<form method="post">
+<form id="update-meeting-form" method="post">
     {% csrf_token %}
     {{ form.as_p }}
 
@@ -8,14 +35,73 @@
     <a href="{% url 'college_meetings' %}" class="btn btn-secondary">Cancel</a>
 </form>
 
-<!-- Optional: Add some form styling -->
-<style>
-    form {
-        max-width: 600px;
-        margin: auto;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
-</style>
+<!-- Calendar Container -->
+<div id="calendar"></div>
+
+<!-- Include FullCalendar JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.4/fullcalendar.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: [
+            {% for meeting in meetings %}
+            {
+                title: '{{ meeting.enquiry.student.user.username }} - {{ meeting.status }}',
+                start: '{{ meeting.meeting_date }}T{{ meeting.meeting_time }}',
+                backgroundColor: 
+                    {% if meeting.status == "APPROVED" %}
+                        "#28a745"
+                    {% elif meeting.status == "PENDING" %}
+                        "#ffc107"
+                    {% else %}
+                        "#dc3545"
+                    {% endif %}
+            },
+            {% endfor %}
+        ]
+    });
+    
+    calendar.render();
+
+    // Handle form submission via AJAX to update the calendar dynamically
+    document.getElementById('update-meeting-form').addEventListener('submit', function(e) {
+        e.preventDefault();  // Prevent the form from submitting the traditional way
+
+        var form = this;
+        var formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.meeting_id) {
+                // Add the new/updated meeting to the calendar
+                calendar.addEvent({
+                    title: data.student + ' - ' + data.status,
+                    start: data.meeting_date + 'T' + data.meeting_time,
+                    backgroundColor: data.status === 'APPROVED' ? '#28a745' : 
+                                     (data.status === 'PENDING' ? '#ffc107' : '#dc3545'),
+                });
+
+                alert('Meeting has been scheduled/updated');
+            }
+        })
+        .catch(error => {
+            console.error('Error scheduling meeting:', error);
+            alert('An error occurred while scheduling the meeting.');
+        });
+    });
+});
+</script>
+
+</body>
+</html>

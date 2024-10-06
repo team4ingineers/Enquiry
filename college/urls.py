@@ -13,5 +13,6 @@ urlpatterns = [
     path('students-enquired/', college_students_enquired, name='college_students_enquired'),
     path('students-enquired/<int:student_id>/', college_student_enquiries, name='college_student_enquiries'),
     path('enquiries/', college_enquiries_view, name='college_enquiries'),
-    path('schedule-meeting/<int:enquiry_id>/', schedule_meeting_view, name='schedule_meeting'),
+    path('schedule-meeting/<int:enquiry_id>/', schedule_meeting_view, name='schedule_meeting_view'),
+    path('approved-rescheduled-meetings/', approved_rescheduled_meetings_view, name='approved_rescheduled_meetings'),
 ]

@@ -675,3 +675,4 @@ def schedule_meeting(request, id):
         form = ScheduleMeetingForm()
 
     return render(request, 'schedule_meeting.html', {'form': form, 'enquiry': enquiry})
+
