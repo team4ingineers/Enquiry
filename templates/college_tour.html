@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.css" />
     <script src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js"></script>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe-vr.js"></script> <!-- Include A-Frame VR component -->
     <style>
         body {
             margin: 0;
@@ -34,10 +35,11 @@
     <div id="panorama"></div>
 
     <h2>VR Experience</h2>
-    <a-scene embedded>
-        <a-sky src="/media/virtualimage.jpg" rotation="0 -130 0"></a-sky>
-    </a-scene>
-    
+    <div class="vr-container" id="vr-container">
+        <a-scene id="vr-scene" embedded>
+            <a-sky id="vr-sky" src="/media/virtualimage.jpg?v=1" rotation="0 -130 0"></a-sky>
+        </a-scene>
+    </div>
 
     <button class="vr-button" onclick="toggleVR()">Toggle VR View</button>
 
@@ -45,21 +47,28 @@
         // Initialize Pannellum viewer
         pannellum.viewer('panorama', {
             "type": "equirectangular",
-            "panorama": "/media/virtualimage.jpg",
+            "panorama": "/media/virtualimage.jpg?v=1", // Use a query parameter to force reload
             "autoLoad": true
         });
 
         // Function to toggle VR view
         function toggleVR() {
-            const vrContainer = document.querySelector('.vr-container');
-            if (vrContainer.style.display === 'none') {
-                vrContainer.style.display = 'block';
-                document.querySelector('a-scene').setAttribute('embedded', '');
+            const vrContainer = document.getElementById('vr-container');
+            const panoramaContainer = document.getElementById('panorama');
+
+            if (vrContainer.style.display === 'none' || vrContainer.style.display === "") {
+                vrContainer.style.display = 'block'; // Show the VR scene
+                panoramaContainer.style.display = 'none'; // Hide the 360-degree view
             } else {
-                vrContainer.style.display = 'none';
-                document.querySelector('a-scene').removeAttribute('embedded');
+                vrContainer.style.display = 'none'; // Hide the VR scene
+                panoramaContainer.style.display = 'block'; // Show the 360-degree view
             }
         }
+
+        // Show 360-degree view initially
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('vr-container').style.display = 'none'; // Ensure VR is hidden initially
+        });
     </script>
 </body>
 </html>

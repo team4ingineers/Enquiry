@@ -1,29 +1,115 @@
-<h1>Schedule a Meeting</h1>
+{% extends 'studentbase.html' %}
 
-<div class="schedule-form">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}  <!-- Renders the form fields in paragraph format -->
-        <button type="submit" class="btn btn-primary">Schedule</button>
-        <a href="{% url 'enquiry_detail' enquiry.id %}" class="btn btn-outline-secondary">Cancel</a>
-    </form>
+{% block content %}
+<div class="head-title">
+    <div class="left">
+        <h1>Dashboard</h1>
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Dashboard</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+                <a class="active" href="#">Enquery Details</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+                <a class="active" href="#">Schedule Meeting</a>
+            </li>
+        </ul>
+    </div>
+  
+  </div>
+<div class="schedule-container">
+    <h1>Schedule a Meeting</h1>
+
+    <div class="schedule-form">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Renders the form fields in paragraph format -->
+            <button type="submit" class="btn-schedule">Schedule</button>
+            <a href="{% url 'enquiry_detail' enquiry.id %}" class="btn-cancel">Cancel</a>
+        </form>
+    </div>
 </div>
 
-<!-- Optional: Add some styles -->
+<!-- Scoped CSS -->
 <style>
+    /* Body styling scoped to this component */
+    .schedule-container {
+        font-family: Arial, sans-serif; /* Font for the entire container */
+        background-color: #f4f4f4; /* Light background for the body */
+        margin: 0;
+        padding: 20px; /* Padding around the page */
+        max-width: 600px; /* Maximum width for the container */
+        margin: 0 auto; /* Center the container */
+        padding: 30px; /* Padding around the content */
+        background-color: #fff; /* White background for the schedule container */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+        text-align: center; /* Center text in the container */
+    }
+
     .schedule-form {
-        max-width: 500px;
-        margin: auto;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px; /* Space above the form */
+        padding: 20px; /* Padding inside the form */
+        background-color: #f9f9f9; /* Light gray background for the form */
+        border-radius: 10px; /* Rounded corners for the form */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
     }
+
     .schedule-form form {
-        display: flex;
-        flex-direction: column;
+        display: flex; /* Flexbox layout */
+        flex-direction: column; /* Stack form elements vertically */
+        align-items: center; /* Center form elements */
     }
-    .schedule-form .btn {
-        margin-top: 15px;
+
+    .schedule-form p {
+        margin: 10px 0; /* Space between form fields */
+    }
+
+    .schedule-form .btn-schedule, .schedule-form .btn-cancel {
+        padding: 12px 20px; /* Padding for buttons */
+        font-size: 16px; /* Font size for buttons */
+        border: none; /* Remove default border */
+        border-radius: 5px; /* Rounded corners for buttons */
+        cursor: pointer; /* Pointer cursor on hover */
+        transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+        text-align: center; /* Center text in buttons */
+        width: 100%; /* Full width buttons */
+        margin: 10px 0; /* Space between buttons */
+    }
+
+    .btn-schedule {
+        background-color: #007bff; /* Primary button color */
+        color: white; /* White text color */
+    }
+
+    .btn-cancel {
+        background-color: transparent; /* Transparent background */
+        color: #6c757d; /* Text color for secondary button */
+        border: 1px solid #6c757d; /* Border for secondary button */
+    }
+
+    .btn-schedule:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        transform: translateY(-2px); /* Slightly raise button on hover */
+    }
+
+    .btn-cancel:hover {
+        background-color: #f0f0f0; /* Light gray background on hover */
+        transform: translateY(-2px); /* Slightly raise button on hover */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+        .schedule-container {
+            padding: 20px; /* Reduced padding on smaller screens */
+        }
+
+        .schedule-form .btn-schedule, .schedule-form .btn-cancel {
+            font-size: 14px; /* Smaller font size on mobile */
+        }
     }
 </style>
+{% endblock %}

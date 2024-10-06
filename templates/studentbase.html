@@ -68,7 +68,7 @@
         </li>
         
         
-        <li class="{% if request.path == '/student/enquiry/1/' %}active{% endif %}{% if request.path == '/student/closedenquiry/' %}active{% endif %}{% if request.path == '/student/studentactiveenquires/' %}active{% endif %}{% if request.path == '/student/send_enquiry/' %}active{% endif %}{% if request.path == '/student/enquires/' %}active{% endif %}">
+        <li class="{% if request.path == '/student/enquiry/1/schedule-meeting/' %}active{% endif %}{% if request.path == '/student/enquiry/1/' %}active{% endif %}{% if request.path == '/student/closedenquiry/' %}active{% endif %}{% if request.path == '/student/studentactiveenquires/' %}active{% endif %}{% if request.path == '/student/send_enquiry/' %}active{% endif %}{% if request.path == '/student/enquires/' %}active{% endif %}">
             <a href="/student/enquires/">
                 <i class='bx bxs-message-dots'></i>
                 <span class="text">Enquires</span>
@@ -80,8 +80,8 @@
                 <span class="text">Ai Helper </span>
             </a>
         </li>
-        <li class="{% if request.path == '/tools/' %}active{% endif %}">
-            <a href="/tools/">
+        <li class="{% if request.path == '/student/tools/' %}active{% endif %}">
+            <a href="/student/tools/">
                 <i class='bx bxs-shopping-bag-alt'></i>
                 <span class="text">Tools</span>
             </a>

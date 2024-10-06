@@ -366,3 +366,13 @@ def schedule_meeting(request, id):
         form = ScheduleMeetingForm()
 
     return render(request, 'schedule_meeting.html', {'form': form, 'enquiry': enquiry})
+
+
+def tools(request):
+    return render(request, 'tools.html')
+
+
+from django.shortcuts import render
+
+def college_tour(request):
+    return render(request, 'college_tour.html')

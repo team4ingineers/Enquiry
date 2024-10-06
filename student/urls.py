@@ -22,6 +22,8 @@ urlpatterns = [
     path('iitmadras/', iitmadras, name ='iitmadras'),
     path('enquiry/<int:id>/', enquiry_detail, name='enquiry_detail'),
     path('enquiry/<int:id>/schedule-meeting/', schedule_meeting, name='schedule_meeting'),
+    path('tools/',tools,name='tools'),
+    path('college_tour/', college_tour, name='college_tour'),
     
 ]
 
