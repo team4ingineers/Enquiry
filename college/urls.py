@@ -15,4 +15,6 @@ urlpatterns = [
     path('enquiries/', college_enquiries_view, name='college_enquiries'),
     path('schedule-meeting/<int:enquiry_id>/', schedule_meeting_view, name='schedule_meeting_view'),
     path('approved-rescheduled-meetings/', approved_rescheduled_meetings_view, name='approved_rescheduled_meetings'),
+    
+    path('scholarshipai/',scholarshipai,name ='scholarshipai'),
 ]

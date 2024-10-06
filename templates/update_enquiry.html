@@ -1,21 +1,94 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Update Enquiry from {{ enquiry.student.user.username }}</h2>
-  <p>Message: {{ enquiry.message }}</p>
+<div class="container mt-5 p-4 custom-container">
+    <h2 class="text-center mb-4">Update Enquiry from {{ enquiry.student.user.username }}</h2>
+    <p>Message: {{ enquiry.message }}</p>
 
-  <form method="POST">
-    {% csrf_token %}
-    <label for="status">Status:</label>
-    <select name="status">
-      <option value="PENDING" {% if enquiry.status == 'PENDING' %}selected{% endif %}>Pending</option>
-      <option value="ACCEPTED" {% if enquiry.status == 'ACCEPTED' %}selected{% endif %}>Accepted</option>
-      <option value="CLOSED" {% if enquiry.status == 'CLOSED' %}selected{% endif %}>CLOSED</option>
-    </select>
+    <form method="POST" class="update-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select name="status" class="form-control">
+                <option value="PENDING" {% if enquiry.status == 'PENDING' %}selected{% endif %}>Pending</option>
+                <option value="ACCEPTED" {% if enquiry.status == 'ACCEPTED' %}selected{% endif %}>Accepted</option>
+                <option value="CLOSED" {% if enquiry.status == 'CLOSED' %}selected{% endif %}>Closed</option>
+            </select>
+        </div>
 
-    <label for="response">Response:</label>
-    <textarea name="response">{{ enquiry.response }}</textarea>
+        <div class="form-group">
+            <label for="response">Response:</label>
+            <textarea name="response" class="form-control" rows="5">{{ enquiry.response }}</textarea>
+        </div>
 
-    <button type="submit">Update Enquiry</button>
-  </form>
+        <div class="text-center">
+            <button type="submit" class="btn btn-update">Update Enquiry</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .custom-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+        border-color: #0056b3;
+        outline: none;
+    }
+
+    .btn-update {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        color: #555;
+        padding: 10px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-update:hover {
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .custom-container {
+            padding: 15px;
+        }
+
+        .form-control {
+            padding: 8px;
+        }
+
+        .btn-update {
+            padding: 8px 15px;
+        }
+    }
+</style>
 {% endblock %}

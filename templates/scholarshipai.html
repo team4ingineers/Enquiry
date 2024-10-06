@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Scholarship Search{% endblock %}
+
+{% block content %}
+<style>
+    .scholarship-search {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 800px;
+        width: 100%;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    h1 {
+        text-align: center;
+        color: #007bff;
+        font-size: 28px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 2px solid #007bff;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        border-color: #0056b3;
+        outline: none;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+    }
+
+    .button1 {
+        background-color: #007bff;
+        color: #fff;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+    }
+
+    .button1:hover {
+        background-color: #0056b3;
+        transform: translateY(-3px);
+    }
+
+    .response-container {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f1f1f1;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease;
+    }
+
+    .response-container p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    .response-container p strong {
+        color: #007bff;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        input, select, textarea, .button1 {
+            font-size: 14px;
+            padding: 12px;
+        }
+    }
+</style>
+
+<div class="scholarship-search">
+    <div class="container">
+        <h1>Scholarship Search</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="number" name="age" placeholder="Your Age" required>
+            <select name="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="text" name="category" placeholder="Category (SC/ST/OBC/General)" required>
+            <select name="income" required>
+                <option value="" disabled selected>Select Annual Income</option>
+                <option value="below 8 lacs">Below 8 Lacs</option>
+                <option value="8 to 15 lacs">8 to 15 Lacs</option>
+                <option value="15 to 27 lacs">15 to 27 Lacs</option>
+                <option value="27 and above">27 and Above</option>
+            </select>
+            <select name="pwd_status" required>
+                <option value="" disabled selected>PWD Status</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+            <select name="jk_minority" required>
+                <option value="" disabled selected>J&K Minority Status</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+            <input type="text" name="field_of_study" placeholder="Field of Study" required>
+            <textarea name="extra_info" placeholder="Any Extra Information"></textarea>
+            <button class="button1" type="submit">Search Scholarships</button>
+        </form>
+
+        <div class="response-container">
+            {% if response %}
+                <div id="responseMessage">{{ response|safe }}</div>
+            {% else %}
+                <p>No results yet. Please fill out the form and search for scholarships.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const responseElement = document.getElementById("responseMessage");
+        if (responseElement) {
+            let responseText = responseElement.innerHTML;
+
+            // Format bold text for any text wrapped with asterisks
+            responseText = responseText.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
+            // Ensure new line for each main point
+            responseText = responseText.replace(/(\d+\.\s.*?)(?=\d+\.\s|$)/gs, "<p>$1</p>");
+            // Format sub-points by new line
+            responseText = responseText.replace(/([^\n]+)/g, "<p>$1</p>");
+            
+            // Apply formatted text to response element
+            responseElement.innerHTML = responseText;
+        }
+    });
+</script>
+{% endblock %}
