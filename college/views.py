@@ -292,24 +292,16 @@ from django.http import JsonResponse
 @login_required
 def update_meeting_view(request, meeting_id):
     meeting = get_object_or_404(Meeting, id=meeting_id)
-    
+
     if request.method == 'POST':
         form = MeetingForm(request.POST, instance=meeting)
         if form.is_valid():
             form.save()
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'meeting_id': meeting.id,
-                    'meeting_date': str(meeting.meeting_date),
-                    'meeting_time': str(meeting.meeting_time),
-                    'status': meeting.status,
-                    'student': meeting.enquiry.student.user.username
-                })
-            return redirect('college_meetings')  # Non-AJAX redirect
+            return redirect('college_meetings')
     else:
         form = MeetingForm(instance=meeting)
 
-    # Fetch all meetings associated with the enquiry's college
+    # Fetch meetings related to the enquiry to display them
     meetings = Meeting.objects.filter(enquiry__college=meeting.enquiry.college)
 
     return render(request, 'update_meeting.html', {
@@ -319,6 +311,12 @@ def update_meeting_view(request, meeting_id):
 
 
 
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from student.models import Meeting
+
+# views.py
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from student.models import Meeting
@@ -334,3 +332,87 @@ def approved_rescheduled_meetings_view(request):
     return render(request, 'approved_rescheduled_meetings.html', {
         'meetings': meetings,
     })
+
+def scholarshipai(request):
+    return render(request, 'scholarshipai.html')
+
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
+from django.shortcuts import render
+
+# Load environment variables
+load_dotenv()
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+
+# Generation configuration
+generation_config = {
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "top_k": 64,
+    "max_output_tokens": 1024,
+    "response_mime_type": "text/plain",
+}
+
+def scholarshipai(request):
+    # Initialize the formatted response to avoid UnboundLocalError
+    formatted_response = "No results yet. Please fill out the form and search for scholarships."
+
+    if request.method == "POST":
+        name = request.POST.get("name", "")
+        age = request.POST.get("age", "")
+        gender = request.POST.get("gender", "")
+        category = request.POST.get("category", "")
+        income = request.POST.get("income", "")
+        pwd_status = request.POST.get("pwd_status", "")
+        jk_minority = request.POST.get("jk_minority", "")
+        field_of_study = request.POST.get("field_of_study", "")
+        extra_info = request.POST.get("extra_info", "")
+
+        user_input = (
+            f"Suggest scholarships based on the following criteria:\n"
+            f"Name: {name}\n"
+            f"Age: {age}\n"
+            f"Gender: {gender}\n"
+            f"Category: {category}\n"
+            f"Annual Income: {income}\n"
+            f"PWD Status: {pwd_status}\n"
+            f"J&K Minority Status: {jk_minority}\n"
+            f"Field of Study: {field_of_study}\n"
+            f"Extra Information: {extra_info}\n"
+            "Provide detailed information about the available scholarships."
+        )
+
+        try:
+            model = genai.GenerativeModel(
+                model_name="gemini-1.0-pro",
+                generation_config=generation_config,
+            )
+
+            chat_session = model.start_chat(history=[])
+            response = chat_session.send_message(user_input)
+            response_text = response.text
+
+            # Format the response text for clean output
+            formatted_response = format_response(response_text)
+
+        except Exception as e:
+            formatted_response = f"An error occurred: {str(e)}"
+
+    context = {'response': formatted_response}
+    return render(request, 'scholarshipai.html', context)
+
+def format_response(response_text):
+    # Break the response text into lines
+    lines = response_text.split("\n")
+    formatted_lines = []
+
+    for line in lines:
+        if line.strip():
+            if line[0].isdigit():
+                formatted_lines.append(f"<p><strong>{line}</strong></p>")
+            else:
+                formatted_lines.append(f"<p>{line}</p>")
+
+    # Join the formatted lines back into a string
+    return "\n".join(formatted_lines)

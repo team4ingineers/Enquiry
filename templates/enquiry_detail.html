@@ -1,93 +1,154 @@
 {% extends 'studentbase.html' %}
 
 {% block content %}
-<h1>Enquiry Details</h1>
-<div class="enquiry-detail">
-    <p><strong>Enquiry to:</strong> {{ enquiry.college.user.username }}</p>
-    <p><strong>Message:</strong> {{ enquiry.message }}</p>
-    <p><strong>Status:</strong> {{ enquiry.get_status_display }}</p>
-    <p><strong>Seen by College:</strong> {{ enquiry.seen_by_college|yesno:"Yes,No" }}</p>
-    <p><strong>Response:</strong> {{ enquiry.response|default:"No response yet" }}</p>
-    <p><strong>Date Created:</strong> {{ enquiry.date_created }}</p>
+<div class="head-title">
+    <div class="left">
+        <h1>Dashboard</h1>
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Dashboard</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+                <a class="active" href="#">Enquery Details</a>
+            </li>
+        </ul>
+    </div>
+  
+  </div>
+<div class="enquiry-container">
+    <h1>Enquiry Details</h1>
+    <div class="enquiry-detail">
+        <p><strong>Enquiry to:</strong> {{ enquiry.college.user.username }}</p>
+        <p><strong>Message:</strong> {{ enquiry.message }}</p>
+        <p><strong>Status:</strong> {{ enquiry.get_status_display }}</p>
+        <p><strong>Seen by College:</strong> {{ enquiry.seen_by_college|yesno:"Yes,No" }}</p>
+        <p><strong>Response:</strong> {{ enquiry.response|default:"No response yet" }}</p>
+        <p><strong>Date Created:</strong> {{ enquiry.date_created }}</p>
+    </div>
+
+    <h3>Scheduled Meetings</h3>
+    <ul class="meeting-list">
+        {% for meeting in enquiry.meetings.all %}
+            <li class="meeting-item">
+                Meeting on {{ meeting.meeting_date }} at {{ meeting.meeting_time }} 
+                <strong>Status:</strong> {{ meeting.get_status_display }}
+                {% if meeting.status == 'PENDING' %} (Waiting for college approval)
+                {% elif meeting.status == 'REJECTED' %} (Rejected)
+                {% elif meeting.status == 'ACCEPTED' %} (Accepted)
+                {% endif %}
+            </li>
+        {% empty %}
+            <p>No meetings scheduled yet.</p>
+        {% endfor %}
+    </ul>
+
+    <div class="enquiry-actions">
+        <a href="{% url 'schedule_meeting' enquiry.id %}" class="btn btn-primary">Schedule Meeting</a>
+        <a href="{% url 'studentactiveenquires' %}" class="btn btn-outline-secondary">Back to Enquiries</a>
+    </div>
 </div>
 
-<!-- Display scheduled meetings with status -->
-<h3>Scheduled Meetings</h3>
-<ul>
-    {% for meeting in enquiry.meetings.all %}
-        <li>
-            Meeting on {{ meeting.meeting_date }} at {{ meeting.meeting_time }} 
-            <strong>Status:</strong> {{ meeting.get_status_display }}
-            {% if meeting.status == 'PENDING' %} (Waiting for college approval)
-            {% elif meeting.status == 'REJECTED' %} (Rejected)
-            {% elif meeting.status == 'ACCEPTED' %} (Accepted)
-            {% endif %}
-        </li>
-    {% empty %}
-        <p>No meetings scheduled yet.</p>
-    {% endfor %}
-</ul>
-
-<a href="{% url 'schedule_meeting' enquiry.id %}" class="btn btn-primary">Schedule Meeting</a>
-<a href="{% url 'studentactiveenquires' %}" class="btn btn-outline-secondary">Back to Enquiries</a>
-
-<!-- Optional: Style for buttons -->
+<!-- Scoped CSS -->
 <style>
-    .enquiry-detail {
-        background-color: #f9f9f9;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 20px auto;
-        max-width: 600px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    .enquiry-container {
+        font-family: Arial, sans-serif; /* Font for the enquiry container */
+        background-color: #fff; /* White background for the enquiry container */
+        border-radius: 10px; /* Rounded corners */
+        padding: 30px; /* Padding around the content */
+        max-width: 800px; /* Maximum width of the container */
+        margin: 20px auto; /* Center the container */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
     }
 
-    .enquiry-detail h1 {
-        text-align: center;
+    .enquiry-detail {
+        margin-bottom: 30px; /* Space below the details section */
+        padding: 20px; /* Padding inside the details section */
+        border: 1px solid #e0e0e0; /* Light gray border */
+        border-radius: 8px; /* Rounded corners for details */
+        background-color: #f9f9f9; /* Light gray background for the details */
+    }
+
+    .enquiry-container h1 {
+        text-align: center; /* Center the main heading */
+        color: #333; /* Dark text color */
+        margin-bottom: 20px; /* Space below the heading */
     }
 
     .enquiry-detail p {
-        font-size: 16px;
+        font-size: 16px; /* Font size for text */
+        margin: 10px 0; /* Space between paragraphs */
     }
 
-    .enquiry-detail a {
-        display: inline-block;
-        margin-top: 20px;
-        text-decoration: none;
-        color: #007bff;
-        font-weight: bold;
+    .meeting-list {
+        list-style-type: none; /* Remove default list styling */
+        padding: 0; /* Remove padding */
     }
 
-    .enquiry-detail a:hover {
-        text-decoration: underline;
+    .meeting-item {
+        padding: 15px; /* Padding for each meeting item */
+        border: 1px solid #e0e0e0; /* Light gray border */
+        border-radius: 5px; /* Rounded corners for meeting items */
+        margin-bottom: 10px; /* Space below each meeting item */
+        background-color: #fff; /* White background for meeting items */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow effect */
     }
 
     .enquiry-actions {
-        margin-top: 20px;
+        display: flex; /* Flexbox for button alignment */
+        justify-content: space-between; /* Space between buttons */
+        margin-top: 20px; /* Space above buttons */
     }
 
-    .enquiry-actions .btn {
-        margin-right: 10px;
-        padding: 10px 20px;
-        text-decoration: none;
-        display: inline-block;
+    .btn {
+        padding: 12px 20px; /* Padding for buttons */
+        font-size: 16px; /* Font size for buttons */
+        border: none; /* Remove default border */
+        border-radius: 5px; /* Rounded corners for buttons */
+        cursor: pointer; /* Pointer cursor on hover */
+        transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+        text-align: center; /* Center text in buttons */
     }
 
     .btn-primary {
-        background-color: #007bff;
-        color: white;
-        border: none;
+        background-color: #007bff; /* Primary button color */
+        color: white; /* White text color */
     }
 
     .btn-outline-secondary {
-        background-color: transparent;
-        color: #6c757d;
-        border: 1px solid #6c757d;
+        background-color: transparent; /* Transparent background */
+        color: #6c757d; /* Text color for secondary button */
+        border: 1px solid #6c757d; /* Border for secondary button */
     }
 
-    .btn:hover {
-        opacity: 0.8;
+    .btn-primary:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        transform: translateY(-2px); /* Slightly raise button on hover */
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f0f0f0; /* Light gray background on hover */
+        transform: translateY(-2px); /* Slightly raise button on hover */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+        .enquiry-container {
+            padding: 20px; /* Reduced padding on smaller screens */
+        }
+
+        .btn {
+            width: 100%; /* Full width buttons on small screens */
+            margin-bottom: 10px; /* Space below buttons */
+        }
+
+        .enquiry-detail p {
+            font-size: 14px; /* Smaller font size on mobile */
+        }
+
+        .enquiry-container h1 {
+            font-size: 24px; /* Smaller heading on mobile */
+        }
     }
 </style>
 {% endblock %}

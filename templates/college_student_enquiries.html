@@ -1,17 +1,76 @@
-<h1>Enquiries from {{ enquiries.first.student.user.get_full_name }}</h1>
+{% extends 'base.html' %}
 
-{% if enquiries %}
-    <ul>
-        {% for enquiry in enquiries %}
-            <li>
-                <strong>Message:</strong> {{ enquiry.message }} <br>
-                <strong>Status:</strong> {{ enquiry.get_status_display }} <br>
-                <strong>Date:</strong> {{ enquiry.date_created }}
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>This student has not made any enquiries.</p>
-{% endif %}
+{% block content %}
+<div class="container mt-5 p-4 custom-container">
+    <h1 class="text-center mb-4">Enquiries from {{ enquiries.first.student.user.get_full_name }}</h1>
 
-<a href="{% url 'college_students_enquired' %}" class="btn btn-secondary">Back to Students</a>
+    <div class="row">
+        {% if enquiries %}
+            {% for enquiry in enquiries %}
+            <div class="col-md-4 mb-4">
+                <div class="enquiry-card">
+                    <strong>Message:</strong> {{ enquiry.message }} <br>
+                    <strong>Status:</strong> {{ enquiry.get_status_display }} <br>
+                    <strong>Date:</strong> {{ enquiry.date_created }}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center mt-3">This student has not made any enquiries.</p>
+        {% endif %}
+    </div>
+
+ 
+</div>
+
+<style>
+    .custom-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    .enquiry-card {
+        background-color: #fafafa;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.3s;
+        height: 100%; /* To make all cards the same height */
+    }
+
+    .enquiry-card:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transform: translateY(-3px);
+    }
+
+    .btn-back {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        color: #555;
+        padding: 10px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-back:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .enquiry-card {
+            padding: 10px;
+        }
+
+        .btn-back {
+            padding: 8px 15px;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,53 +1,129 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>All Enquiries for {{ request.user.college.name }}</h1>
+  <div class="container mt-5 p-4 custom-container">
+      <h1 class="text-center mb-4">All Enquiries for {{ request.user.college.name }}</h1>
 
-  {% if enquiries %}
-    <table>
-      <thead>
-        <tr>
-          <th>Student</th>
-          <th>Message</th>
-          <th>Status</th>
-          <th>Response</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for enquiry in enquiries %}
-          <tr>
-            <td>{{ enquiry.student.user.username }}</td>
-            <td>{{ enquiry.message }}</td>
-            <td>{{ enquiry.get_status_display }}</td>
-            <td>{{ enquiry.response|default:"No response yet" }}</td>
-            <td>
-              <a href="{% url 'update_enquiry_status' enquiry.id %}">Update</a>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>No enquiries yet.</p>
-  {% endif %}
+      {% if enquiries %}
+        <div class="table-responsive mt-4">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Response</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for enquiry in enquiries %}
+                <tr>
+                  <td>{{ enquiry.student.user.username }}</td>
+                  <td>{{ enquiry.message }}</td>
+                  <td>{{ enquiry.get_status_display }}</td>
+                  <td>{{ enquiry.response|default:"No response yet" }}</td>
+                  <td>
+                    <a href="{% url 'update_enquiry_status' enquiry.id %}" class="btn btn-action">Update</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-center mt-3">No enquiries yet.</p>
+      {% endif %}
 
-  <a href="{% url 'college_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+      <!-- Added margin-top to the button container for spacing -->
+      <div class="text-center mt-4">
+        <a href="{% url 'college_dashboard' %}" class="btn btn-back">Back to Dashboard</a>
+      </div>
+  </div>
 
   <style>
-    table {
+    /* Main container styling */
+    .custom-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+    }
+
+    /* Table styling */
+    .custom-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      background-color: #fafafa;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    table, th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
+
+    .custom-table thead {
+      background-color: #f7f7f7;
+      border-bottom: 2px solid #eaeaea;
     }
-    th {
-      background-color: #f2f2f2;
+
+    .custom-table th, .custom-table td {
+      padding: 15px 20px;
       text-align: left;
+      vertical-align: middle;
+      border-bottom: 1px solid #eaeaea;
     }
-    tr:hover { background-color: #f1f1f1; }
+
+    .custom-table tbody tr:hover {
+      background-color: #f5f5f5;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Button styling */
+    .btn {
+      padding: 10px 20px; /* Set fixed padding for consistent button size */
+      border-radius: 8px;
+      font-size: 14px;
+      transition: transform 0.2s, box-shadow 0.3s ease;
+      display: inline-block; /* Ensure buttons are inline-block */
+    }
+
+    .btn-action {
+      background-color: #fff;
+      border: 2px solid #ccc;
+      color: #333;
+      font-weight: 500;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-action:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .btn-back {
+      background-color: #fff;
+      border: 2px solid #ddd;
+      color: #555;
+    }
+
+    .btn-back:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .custom-table th, .custom-table td {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+
+      .btn {
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+    }
   </style>
 {% endblock %}

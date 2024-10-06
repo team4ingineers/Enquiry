@@ -12,7 +12,7 @@ urlpatterns = [
     # path('college-search/', college_search, name='college_search'),
     path('colleges/', colleges , name = 'colleges'),
     path('enquires/', enquires , name = 'enquires'),
-    
+    path('college-search/', college_search, name='college_search'),
     path('login/', StudentLoginView.as_view(), name='student_login'),
     path('student_dashboard', student_dashboard_view, name='student_dashboard_view'),
     path('tour/<int:id>/', college_tour, name='college_tour'),
@@ -31,10 +31,15 @@ urlpatterns = [
     path('iitmadras/', iitmadras, name ='iitmadras'),
     path('enquiry/<int:id>/', enquiry_detail, name='enquiry_detail'),
     path('enquiry/<int:id>/schedule-meeting/', schedule_meeting, name='schedule_meeting'),
+<<<<<<< HEAD
     
     path('health-scores/', health_score_list, name='health_score_list'),
     path('college/<int:college_id>/', college_health_details, name='college_health_details'),
     path('college/<int:college_id>/submit-feedback/', submit_feedback, name='submit_feedback'),
+=======
+    path('tools/',tools,name='tools'),
+    path('college_tour/', college_tour, name='college_tour'),
+>>>>>>> 782ff8cd15d73ead3391005301853eb81e0b9621
 ]
 
 
