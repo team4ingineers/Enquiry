@@ -14,10 +14,19 @@ class StudentProfileAdmin(admin.ModelAdmin):
 
 # Register Enquiry model
 admin.site.register(Enquiry)
-
-
 from django.contrib import admin
-from .models import CollegeHealthScore, StudentFeedback
+from .models import College, HealthScore, StudentFeedback
+@admin.register(HealthScore)
+class HealthScoreAdmin(admin.ModelAdmin):
+    list_display = ('college', 'health_score', 'number_of_agreements', 'number_of_disagreements')
+    search_fields = ('college__user__username',)
+    list_filter = ('health_score',)
+    ordering = ('-health_score',)
 
-admin.site.register(CollegeHealthScore)
-admin.site.register(StudentFeedback)
+# Register the StudentFeedback model
+@admin.register(StudentFeedback)
+class StudentFeedbackAdmin(admin.ModelAdmin):
+    list_display = ('student', 'college_health_score', 'feedback_type', 'created_at')
+    search_fields = ('student__username', 'college_health_score__college__user__username')
+    list_filter = ('feedback_type', 'created_at')
+    ordering = ('-created_at',)

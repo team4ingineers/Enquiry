@@ -70,38 +70,7 @@ from django.db import models
 from college.models import College
 from django.contrib.auth.models import User
 
-class CollegeHealthScore(models.Model):
-    college = models.OneToOneField(College, on_delete=models.CASCADE)
-    health_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)  # Score can be 0.00 to 100.00
-    number_of_agreements = models.PositiveIntegerField(default=0)
-    number_of_disagreements = models.PositiveIntegerField(default=0)
 
-    def update_health_score(self):
-        # A simple algorithm to calculate the health score. This can be refined.
-        total_feedback = self.number_of_agreements + self.number_of_disagreements
-        if total_feedback > 0:
-            self.health_score = (self.number_of_agreements / total_feedback) * 100
-        else:
-            self.health_score = 0.00
-        self.save()
-
-    def __str__(self):
-        return f"{self.college.user.username} - Health Score: {self.health_score}"
-
-class StudentFeedback(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    college_health_score = models.ForeignKey(CollegeHealthScore, on_delete=models.CASCADE)
-    feedback_type = models.CharField(max_length=10, choices=[('Agree', 'Agree'), ('Disagree', 'Disagree')])
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.feedback_type == 'Agree':
-            self.college_health_score.number_of_agreements += 1
-        else:
-            self.college_health_score.number_of_disagreements += 1
-
-        self.college_health_score.update_health_score()
 class Meeting(models.Model):
     enquiry = models.ForeignKey('Enquiry', on_delete=models.CASCADE, related_name='meetings')
     meeting_date = models.DateField()
@@ -119,3 +88,48 @@ class Meeting(models.Model):
 
     def __str__(self):
         return f"Meeting for {self.enquiry} on {self.meeting_date} at {self.meeting_time}"
+
+
+from django.contrib.auth.models import User
+from django.db import models
+
+from django.db import models
+from college.models import College
+from django.contrib.auth.models import User
+class HealthScore(models.Model):
+    college = models.OneToOneField(College, on_delete=models.CASCADE)  # This links each health score to a specific college
+    health_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)  # Score can be 0.00 to 100.00
+    number_of_agreements = models.PositiveIntegerField(default=0)
+    number_of_disagreements = models.PositiveIntegerField(default=0)
+
+    def update_health_score(self):
+        # Calculate the health score based on feedback
+        total_feedback = self.number_of_agreements + self.number_of_disagreements
+        if total_feedback > 0:
+            self.health_score = (self.number_of_agreements / total_feedback) * 100
+        else:
+            self.health_score = 0.00
+        self.save()
+
+    def __str__(self):
+        return f"{self.college.user.username} - Health Score: {self.health_score}"
+
+
+
+
+
+class StudentFeedback(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    college_health_score = models.ForeignKey(HealthScore, on_delete=models.CASCADE)
+    feedback_type = models.CharField(max_length=10, choices=[('Agree', 'Agree'), ('Disagree', 'Disagree')])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.feedback_type == 'Agree':
+            self.college_health_score.number_of_agreements += 1
+        else:
+            self.college_health_score.number_of_disagreements += 1
+        self.college_health_score.save()
+
+
