@@ -212,3 +212,124 @@ def update_meeting_status(request, id):
         form = UpdateMeetingStatusForm(instance=meeting)
 
     return render(request, 'update_meeting_status.html', {'form': form, 'meeting': meeting})
+
+
+from django.shortcuts import render
+from student.models import Enquiry
+
+def college_students_enquired(request):
+    # Get the logged-in college
+    college = request.user.college
+
+    # Fetch all enquiries for this college
+    enquiries = Enquiry.objects.filter(college=college).select_related('student')
+
+    # Get the list of unique students who have enquired
+    students = {enquiry.student for enquiry in enquiries}
+
+    return render(request, 'college_students_enquired.html', {'students': students})
+
+
+def college_student_enquiries(request, student_id):
+    college = request.user.college
+    enquiries = Enquiry.objects.filter(college=college, student_id=student_id)
+
+    return render(request, 'college_student_enquiries.html', {'enquiries': enquiries})
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import College
+
+@login_required
+def college_enquiries_view(request):
+    college = College.objects.get(user=request.user)
+    enquiries = college.enquiry_set.all()  # Retrieve all enquiries for this college
+    enquiries.update(seen_by_college=True)  # Mark all as seen when the page is accessed
+    return render(request, 'college_enquiries.html', {'enquiries': enquiries})
+
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from student.models import Enquiry, Meeting
+from .forms import MeetingForm
+
+@login_required
+def schedule_meeting_view(request, enquiry_id):
+    enquiry = get_object_or_404(Enquiry, id=enquiry_id)
+    
+    if request.method == 'POST':
+        form = MeetingForm(request.POST)
+        if form.is_valid():
+            meeting = form.save(commit=False)
+            meeting.enquiry = enquiry  # Associate with the enquiry
+            meeting.save()
+            return redirect('schedule_meeting', enquiry_id=enquiry.id)
+    else:
+        form = MeetingForm()
+
+    meetings = Meeting.objects.filter(enquiry=enquiry).order_by('meeting_date', 'meeting_time')
+
+    return render(request, 'schedule_meeting.html', {
+        'form': form,
+        'enquiry': enquiry,
+        'meetings': meetings,
+    })
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from student.models import Enquiry, Meeting
+from .forms import MeetingForm
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from student.models import Meeting, Enquiry
+from .forms import MeetingForm
+from django.http import JsonResponse
+
+@login_required
+def update_meeting_view(request, meeting_id):
+    meeting = get_object_or_404(Meeting, id=meeting_id)
+
+    if request.method == 'POST':
+        form = MeetingForm(request.POST, instance=meeting)
+        if form.is_valid():
+            form.save()
+            return redirect('college_meetings')
+    else:
+        form = MeetingForm(instance=meeting)
+
+    # Fetch meetings related to the enquiry to display them
+    meetings = Meeting.objects.filter(enquiry__college=meeting.enquiry.college)
+
+    return render(request, 'update_meeting.html', {
+        'form': form,
+        'meetings': meetings,  # Pass meetings for the calendar
+    })
+
+
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from student.models import Meeting
+
+# views.py
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from student.models import Meeting
+
+@login_required
+def approved_rescheduled_meetings_view(request):
+    # Fetch all approved and rescheduled meetings for the logged-in user's college
+    meetings = Meeting.objects.filter(
+        enquiry__college=request.user.college,
+        status__in=['APPROVED', 'RESCHEDULED']
+    )
+
+    return render(request, 'approved_rescheduled_meetings.html', {
+        'meetings': meetings,
+    })
+

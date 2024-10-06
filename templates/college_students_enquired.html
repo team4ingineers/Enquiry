@@ -1,0 +1,50 @@
+<h1>Students Who Enquired</h1>
+
+{% if students %}
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Enquiries</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.user.get_full_name }}</td>
+                    <td>{{ student.user.username }}</td>
+                    <td>{{ student.user.email }}</td>
+                    <td>
+                        <a href="{% url 'college_student_enquiries' student.id %}" class="btn btn-primary">
+                            View Enquiries
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No students have made enquiries yet.</p>
+{% endif %}
+
+<a href="{% url 'college_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+
+<!-- Optional: Add some table styling -->
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    tr:hover {background-color: #f1f1f1;}
+</style>

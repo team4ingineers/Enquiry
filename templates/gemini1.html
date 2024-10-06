@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>College Health Scores</title>
+</head>
+<body>
+    <h1>College Health Scores</h1>
+    
+    {% if health_scores %}
+        <ul>
+            {% for item in health_scores %}
+                <li>
+                    <h2>{{ item.college.user.username }} - Location: {{ item.college.location }}</h2>
+                    <p><strong>Health Score:</strong> {{ item.health_score }}</p>
+                    <a href="{% url 'college_health_details' item.college.id %}">View Details</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No health scores available at the moment.</p>
+    {% endif %}
+</body>
+</html>

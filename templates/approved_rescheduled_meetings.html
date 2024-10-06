@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approved & Rescheduled Meetings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.4/fullcalendar.min.css" />
+    <style>
+        #calendar {
+            margin: 20px auto;
+            max-width: 900px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Approved & Rescheduled Meetings</h1>
+
+<!-- Calendar Container -->
+<div id="calendar"></div>
+
+<!-- Include FullCalendar JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.4/fullcalendar.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+
+    // Prepare the events array
+    var events = [
+        {% for meeting in meetings %}
+        {
+            title: '{{ meeting.enquiry.student.user.username }} - {{ meeting.status }}',
+            start: '{{ meeting.meeting_date }}T{{ meeting.meeting_time }}', // ISO 8601 format
+            backgroundColor: 
+                {% if meeting.status == "APPROVED" %}
+                    "#28a745"  // Green
+                {% elif meeting.status == "RESCHEDULED" %}
+                    "#ffc107"  // Yellow
+                {% endif %}
+        },
+        {% endfor %}
+    ];
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: events,
+        // Add other FullCalendar options here if needed
+    });
+
+    calendar.render();
+});
+</script>
+
+</body>
+</html>

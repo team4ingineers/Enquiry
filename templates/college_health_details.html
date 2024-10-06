@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ college_health.college.user.username }} - Health Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        p, h3 {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+            color: #3c763d;
+        }
+        .alert-warning {
+            background-color: #fcf8e3;
+            border-color: #faebcc;
+            color: #8a6d3b;
+        }
+        .feedback-buttons {
+            margin-top: 20px;
+        }
+        button {
+            font-size: 18px;
+            margin: 0 5px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"][value="Agree"] {
+            background-color: #5cb85c;
+            color: white;
+        }
+        button[type="submit"][value="Disagree"] {
+            background-color: #d9534f;
+            color: white;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #337ab7;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>{{ college_health.college.user.username }}</h2>
+
+        <!-- Display the Gemini health score -->
+        <p><strong>Health Score:</strong> {{ gemini_health_score }}</p>
+
+        <h3>Student Feedback:</h3>
+        <p><strong>Agreements:</strong> {{ college_health.number_of_agreements }} ({{ agreement_percentage }}%)</p>
+        <p><strong>Disagreements:</strong> {{ college_health.number_of_disagreements }} ({{ disagreement_percentage }}%)</p>
+
+        {% if health_score_description %}
+            <h3>Gemini's Detailed Breakdown:</h3>
+            <p>{{ health_score_description }}</p>
+        {% else %}
+            <p>No description available.</p>
+        {% endif %}
+
+        <div class="feedback-buttons">
+            <form action="{% url 'submit_feedback' college_health.college.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="feedback_type" value="Agree">✔️ Agree</button>
+                <button type="submit" name="feedback_type" value="Disagree">❌ Disagree</button>
+            </form>
+        </div>
+
+        <a href="{% url 'health_score_list' %}">Back to Health Scores</a>
+    </div>
+</body>
+</html>

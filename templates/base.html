@@ -24,27 +24,37 @@
         <span class="text">College Flow</span>
     </a>
     <ul class="side-menu top">
-        <li class="{% if request.path == '/student/student_dashboard' %}active{% endif %}">
-            <a href="/dashboard/">
+        <li class="{% if request.path == '/college/college_dashboard/' %}active{% endif %}">
+            <a href="/college/college_dashboard/">
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">Dashboard</span>
             </a>
         </li>
         <!-- Use 'startswith' check for student details to include sub-tabs -->
-        <li class="{% if '/student_detail/' in request.path %}active{% endif %}">
-            <a href="/student_detail/">
+        <li class="{% if '/college/students-enquired/' in request.path %}active{% endif %}">
+            <a href="/college/students-enquired/">
                 <i class='bx bxs-group'></i>
-                <span class="text">Colleges</span>
+                <span class="text">Students</span>
             </a>
         </li>
         
         
-        <li class="{% if request.path == '/form_dashboard/' %}active{% endif %}">
-            <a href="/form_dashboard/">
+        <li class="{% if request.path == '/college/enquiries/' %}active{% endif %}">
+            <a href="/college/enquiries/">
                 <i class='bx bxs-message-dots'></i>
-                <span class="text">Forms</span>
+                <span class="text">Enquiries</span>
             </a>
         </li>
+        
+        
+        <li class="{% if request.path == '/college/meetings/' %}active{% endif %}">
+            <a href="/college/meetings/">
+                <i class='bx bxs-message-dots'></i>
+                <span class="text">Schedule</span>
+            </a>
+        </li>
+
+
         <li class="{% if request.path == '/progress_report/' %}active{% endif %}">
             <a href="/progress_report/">
                 <i class='bx bxs-doughnut-chart'></i>

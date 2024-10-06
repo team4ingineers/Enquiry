@@ -1,0 +1,17 @@
+<h1>Enquiries from {{ enquiries.first.student.user.get_full_name }}</h1>
+
+{% if enquiries %}
+    <ul>
+        {% for enquiry in enquiries %}
+            <li>
+                <strong>Message:</strong> {{ enquiry.message }} <br>
+                <strong>Status:</strong> {{ enquiry.get_status_display }} <br>
+                <strong>Date:</strong> {{ enquiry.date_created }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>This student has not made any enquiries.</p>
+{% endif %}
+
+<a href="{% url 'college_students_enquired' %}" class="btn btn-secondary">Back to Students</a>

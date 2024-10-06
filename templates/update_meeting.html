@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Meeting Status</title>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+    <style>
+        form {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        #calendar {
+            margin-top: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Update Meeting Status</h1>
+
+<form id="update-meeting-form" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Update Status</button>
+    <a href="{% url 'college_meetings' %}" class="btn btn-secondary">Cancel</a>
+</form>
+
+<!-- Calendar Container -->
+<div id="calendar"></div>
+
+<script>
+    $(document).ready(function() {
+        var meetings = [
+            {% for meeting in meetings %}
+            {
+                title: '{{ meeting.description|default:"Meeting" }}',
+                start: '{{ meeting.meeting_date|date:"Y-m-d" }}T{{ meeting.meeting_time|time:"H:i" }}',
+                allDay: true,
+            },
+            {% endfor %}
+        ];
+
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            events: meetings,
+            editable: true,
+            droppable: true // Allows dragging to change dates (optional)
+        });
+    });
+</script>
+
+</body>
+</html>

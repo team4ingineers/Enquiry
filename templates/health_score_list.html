@@ -1,0 +1,13 @@
+{% if health_scores %}
+    <ul>
+    {% for health_score in health_scores %}
+        <li>
+            <a href="{% url 'college_health_details' health_score.college.id %}">
+                {{ health_score.college.user.username }} - Health Score: {{ health_score.health_score }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No health scores available at the moment.</p>
+{% endif %}
