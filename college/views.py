@@ -292,24 +292,16 @@ from django.http import JsonResponse
 @login_required
 def update_meeting_view(request, meeting_id):
     meeting = get_object_or_404(Meeting, id=meeting_id)
-    
+
     if request.method == 'POST':
         form = MeetingForm(request.POST, instance=meeting)
         if form.is_valid():
             form.save()
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'meeting_id': meeting.id,
-                    'meeting_date': str(meeting.meeting_date),
-                    'meeting_time': str(meeting.meeting_time),
-                    'status': meeting.status,
-                    'student': meeting.enquiry.student.user.username
-                })
-            return redirect('college_meetings')  # Non-AJAX redirect
+            return redirect('college_meetings')
     else:
         form = MeetingForm(instance=meeting)
 
-    # Fetch all meetings associated with the enquiry's college
+    # Fetch meetings related to the enquiry to display them
     meetings = Meeting.objects.filter(enquiry__college=meeting.enquiry.college)
 
     return render(request, 'update_meeting.html', {
@@ -319,6 +311,12 @@ def update_meeting_view(request, meeting_id):
 
 
 
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from student.models import Meeting
+
+# views.py
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from student.models import Meeting
@@ -334,3 +332,4 @@ def approved_rescheduled_meetings_view(request):
     return render(request, 'approved_rescheduled_meetings.html', {
         'meetings': meetings,
     })
+
