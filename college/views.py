@@ -426,9 +426,14 @@ import json
 
 # Display students in various stages
 def manage_students(request):
-    enquired_students = Stage.objects.filter(current_stage='Enquired')
-    admission_students = Stage.objects.filter(current_stage='Admission')
-    counseling_students = Stage.objects.filter(current_stage='Counseling')
+    enquired_students = Stage.objects.filter(current_stage='Enquired').select_related('student')
+    admission_students = Stage.objects.filter(current_stage='Admission').select_related('student')
+    counseling_students = Stage.objects.filter(current_stage='Counseling').select_related('student')
+
+    # Check the output in the terminal
+    print("Enquired Students:", enquired_students)
+    print("Admission Students:", admission_students)
+    print("Counseling Students:", counseling_students)
 
     context = {
         'enquired_students': enquired_students,
@@ -436,6 +441,7 @@ def manage_students(request):
         'counseling_students': counseling_students,
     }
     return render(request, 'manage_students.html', context)
+
 
 # Handle AJAX request to update student's stage
 def update_stage(request):
