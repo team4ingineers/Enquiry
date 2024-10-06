@@ -19,6 +19,7 @@ def student_signup(request):
 
     return render(request, 'student_signup.html', {'form': form})
 
+from twilio.rest import Client
 
 @login_required
 def send_enquiry(request):
@@ -28,7 +29,16 @@ def send_enquiry(request):
         if form.is_valid():
             enquiry = form.save(commit=False)
             enquiry.student = student  # Associate the enquiry with the logged-in student
-            enquiry.save()  # Save the enquiry to the database
+            enquiry.save()
+            account_sid = 'ACb604cdff6ba558c3c2b0c563a69a9a02'
+            auth_token = '1633d5d0f6d0eaeec236ba96af72b62b'
+            client = Client(account_sid, auth_token)
+            message = client.messages.create(
+                to='+919137796495',
+                from_='+18577676358',
+                body='College Flow\nIIT Madras:- New Enquiry Request has been Raised!!',
+                )
+            print(message.sid)  # Save the enquiry to the database
             return redirect('student_dashboard')  # Redirect to student's dashboard after sending
     else:
         form = EnquiryForm()
