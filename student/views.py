@@ -457,19 +457,24 @@ from student.models import HealthScore, StudentFeedback
 from college.models import College
 
 
+from django.shortcuts import render, get_object_or_404
+from student.models import HealthScore
+from college.models import College
+
 def college_health_details(request, college_id):
     college_health = get_object_or_404(HealthScore, college__id=college_id)
+
+    # Placeholder for Gemini API response
+    gemini_health_score = "Loading..."  
+    health_score_description = ""
 
     # Gemini API request
     user_input = (
         f"Generate a health score percentage (always give the same for that college) and description for the college '{college_health.college.user.username}'. "
         "Consider academic performance, student satisfaction, placement opportunities. "
         "Consider and show NIRF and NAAC rankings, use internet data and feedback. "
-        "Don't give too big paragraph give small para and values more like grading and statements."
+        "Keep the response concise, with grades and statements, and provide feedback in structured form."
     )
-    
-    health_score_description = ""
-    gemini_health_score = ""
 
     try:
         model = genai.GenerativeModel(model_name="gemini-1.0-pro")
@@ -477,12 +482,19 @@ def college_health_details(request, college_id):
         response = chat_session.send_message(user_input)
         response_text = response.text
 
-        # Split the response to get the score and description
+        # Split the response to extract score and description
         gemini_health_score = response_text.splitlines()[0]
         health_score_description = "\n".join(response_text.splitlines()[1:])
 
-        # Remove asterisks from gemini_health_score
-        gemini_health_score = gemini_health_score.replace('*', '').strip()  # Clean up the health score
+        # Clean the score and description from unwanted characters (e.g., asterisks)
+        gemini_health_score = gemini_health_score.replace('*', '').strip()
+
+        # Replace asterisks in the description with bold formatting
+        health_score_description = health_score_description.replace('*', '').strip()
+
+        # Additional formatting if required
+        health_score_description = health_score_description.replace("\n\n", "\n")  # Remove extra newlines
+        health_score_description = health_score_description.replace("", "<strong>").replace("", "</strong>")  # Add strong tags
     except Exception as e:
         gemini_health_score = "N/A"
         health_score_description = f"An error occurred: {str(e)}"

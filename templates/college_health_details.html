@@ -15,26 +15,35 @@
         }
 
         .container {
-            margin: 20px auto; /* Center the container */
-            max-width: 1200px; /* Set a max width */
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        /* New flex container for card and feedback */
+        .flex-container {
+            display: flex;
+            flex-direction: column; /* Stack vertically by default */
+            gap: 20px;
+        }
+
+        .card, .feedback-container {
+            width: 100%; /* Ensure they share the same width */
         }
 
         .card {
-            background: linear-gradient(45deg, #f7f7f7, #e0e0e0);
+            background: linear-gradient(45deg, #FFFDD0, #e0e0e0);
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             color: black;
-            width: 100%;
             margin-bottom: 20px;
-            text-align: center; /* Centering the text in the card */
+            text-align: center;
         }
 
         .feedback-container {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            margin: 0; /* Reset margin for consistent layout */
         }
 
         .feedback-section {
@@ -43,17 +52,16 @@
             padding: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             color: white;
-            width: 45%; /* Width for the feedback section */
+            width: 45%;
             display: flex;
-            flex-direction: column; /* Align items vertically */
-            justify-content: space-between; /* Evenly space items */
-            margin-right: 10px; /* Space between feedback and chart */
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .chart-container {
-            width: 45%; /* Width for the chart container */
+            width: 45%;
             padding: 20px;
-            background-color: #ffffff; /* White background for the chart container */
+            background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
@@ -74,12 +82,12 @@
         }
 
         #agree-btn {
-            background-color: #b8e1d9; /* Lighter green */
+            background-color: #b8e1d9;
             color: black;
         }
 
         #disagree-btn {
-            background-color: #ffcccc; /* Lighter red */
+            background-color: #ffcccc;
             color: black;
         }
 
@@ -91,32 +99,31 @@
         }
 
         canvas {
-            background-color: #ffffff; /* White background for the chart */
+            background-color: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Shadow effect */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* Formatting styles for the detailed breakdown */
         .breakdown {
-            text-align: left; /* Left-align the breakdown text */
-            margin-top: 20px; /* Add space above the breakdown */
-            line-height: 1.6; /* Increase line height for better readability */
+            text-align: left;
+            margin-top: 20px;
+            line-height: 1.6;
         }
 
         .breakdown p {
-            margin: 5px 0; /* Add margin for individual paragraphs */
+            margin: 5px 0;
         }
 
         @media (max-width: 600px) {
             .feedback-container {
-                flex-direction: column; /* Stack feedback and chart on mobile */
-                align-items: center; /* Center items */
+                flex-direction: column;
+                align-items: center;
             }
 
             .feedback-section,
             .chart-container {
-                width: 90%; /* Wider sections on mobile */
-                margin-bottom: 20px; /* Add space between stacked items */
+                width: 90%;
+                margin-bottom: 20px;
             }
         }
     </style>
@@ -127,34 +134,39 @@
 <body>
 
     <div class="container">
-        <div class="card">
-            <h2>{{ college_health.college.user.username }}</h2>
-            <p><strong>Health Score (Gemini):</strong>{{ gemini_health_score|striptags }}</p>
+        <!-- New flex container -->
+        <div class="flex-container">
+            <div class="card">
+                <h2>{{ college_health.college.user.username }}</h2>
+                <p><strong>{{ gemini_health_score|striptags }}</strong></p>
 
-            <h3>Gemini's Detailed Breakdown:</h3>
-            <div class="breakdown">
-                <p><strong>Academic Performance:</strong> - NIRF Ranking: 1 - NAAC Accreditation: Grade A++</p>
-                <p><strong>Student Satisfaction:</strong> - High student satisfaction rates in surveys - Vibrant campus life with numerous clubs and organizations</p>
-                <p><strong>Placement Opportunities:</strong> - Excellent placement record - Strong relationships with top recruiters - High salary packages offered to graduates</p>
+                <h3>Gemini's Detailed Breakdown:</h3>
+                <div class="breakdown">
+                    {% if health_score_description %}
+                        <p>{{ health_score_description|linebreaks }}</p>
+                    {% else %}
+                        <p>No detailed breakdown available at the moment.</p>
+                    {% endif %}
+                </div>
             </div>
-        </div>
 
-        <div class="feedback-container">
-            <div class="feedback-section">
-                <h3>Student Feedback:</h3>
-                <p><strong>Agreements:</strong> <span id="agreement-count">{{ college_health.number_of_agreements }}</span> (<span id="agreement-percentage">{{ agreement_percentage }}%</span>)</p>
-                <p><strong>Disagreements:</strong> <span id="disagreement-count">{{ college_health.number_of_disagreements }}</span> (<span id="disagreement-percentage">{{ disagreement_percentage }}%</span>)</p>
+            <div class="feedback-container">
+                <div class="feedback-section">
+                    <h3>Student Feedback:</h3>
+                    <p><strong>Agreements:</strong> <span id="agreement-count">{{ college_health.number_of_agreements }}</span> (<span id="agreement-percentage">{{ agreement_percentage }}%</span>)</p>
+                    <p><strong>Disagreements:</strong> <span id="disagreement-count">{{ college_health.number_of_disagreements }}</span> (<span id="disagreement-percentage">{{ disagreement_percentage }}%</span>)</p>
 
-                <div class="feedback-buttons">
-                    <button type="button" id="agree-btn" name="feedback_type" value="Agree">✔️ Agree</button>
-                    <button type="button" id="disagree-btn" name="feedback_type" value="Disagree">❌ Disagree</button>
+                    <div class="feedback-buttons">
+                        <button type="button" id="agree-btn" name="feedback_type" value="Agree">✔ Agree</button>
+                        <button type="button" id="disagree-btn" name="feedback_type" value="Disagree">❌ Disagree</button>
+                    </div>
+
+                    <p id="feedback-message"></p>
                 </div>
 
-                <p id="feedback-message"></p>
-            </div>
-
-            <div class="chart-container">
-                <canvas id="feedback-chart" width="400" height="300"></canvas>
+                <div class="chart-container">
+                    <canvas id="feedback-chart" width="400" height="300"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -168,14 +180,14 @@
                 datasets: [{
                     label: 'Student Feedback',
                     data: [{{ college_health.number_of_agreements }}, {{ college_health.number_of_disagreements }}],
-                    backgroundColor: ['#b8e1d9', '#ffcccc'], // Lighter colors
+                    backgroundColor: ['#b8e1d9', '#ffcccc'],
                     borderWidth: 1,
                     borderColor: '#ffffff'
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false, // Maintain aspect ratio for responsive design
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         position: 'bottom',
@@ -211,7 +223,6 @@
                             $('#agreement-percentage').text(response.agreement_percentage + '%');
                             $('#disagreement-percentage').text(response.disagreement_percentage + '%');
 
-                            // Update the chart dynamically
                             feedbackChart.data.datasets[0].data = [response.agreement_count, response.disagreement_count];
                             feedbackChart.update();
                         } else if (response.status === 'already_submitted') {
