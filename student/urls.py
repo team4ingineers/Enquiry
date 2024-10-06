@@ -12,7 +12,7 @@ urlpatterns = [
     # path('college-search/', college_search, name='college_search'),
     path('colleges/', colleges , name = 'colleges'),
     path('enquires/', enquires , name = 'enquires'),
-    
+    path('college-search/', college_search, name='college_search'),
     path('login/', StudentLoginView.as_view(), name='student_login'),
     path('student_dashboard', student_dashboard_view, name='student_dashboard_view'),
     path('tour/<int:id>/', college_tour, name='college_tour'),
