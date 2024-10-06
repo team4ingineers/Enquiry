@@ -31,7 +31,7 @@
             </a>
         </li>
         <!-- Use 'startswith' check for student details to include sub-tabs -->
-        <li class="{% if '/college/students-enquired/' in request.path %}active{% endif %}">
+        <li class="{% if '/college/onetone/' in request.path %}active{% endif %}{% if '/college/students-enquired/' in request.path %}active{% endif %}">
             <a href="/college/students-enquired/">
                 <i class='bx bxs-group'></i>
                 <span class="text">Students</span>
@@ -49,7 +49,7 @@
         
         <li class="{% if request.path == '/college/meetings/' %}active{% endif %}">
             <a href="/college/meetings/">
-                <i class='bx bxs-message-dots'></i>
+                <i class='bx bxs-calendar-check'></i>
                 <span class="text">Schedule</span>
             </a>
         </li>
@@ -57,14 +57,14 @@
 
         <li class="{% if request.path == '/college/meetings-list/' %}active{% endif %}">
             <a href="/college/meetings-list/">
-                <i class='bx bxs-message-dots'></i>
+                <i class='bx bx-alarm'></i>
                 <span class="text">Meetings</span>
             </a>
         </li>
 
         <li class="{% if request.path == '/college/manage-students/' %}active{% endif %}">
             <a href="/college/manage-students/">
-                <i class='bx bxs-message-dots'></i>
+                <i class='bx bxs-navigation'></i>
                 <span class="text">Route</span>
             </a>
         </li>
@@ -72,19 +72,19 @@
 
         <li class="{% if request.path == '/college/scholarshipai/' %}active{% endif %}">
             <a href="/college/scholarshipai/">
-                <i class='bx bxs-doughnut-chart'></i>
+                <i class='bx bxs-brain'></i>
                 <span class="text">Scholarship Ai </span>
             </a>
         </li>
-        <li class="{% if request.path == '/college/mail/' %}active{% endif %}">
-            <a href="/college/mail/">
-                <i class='bx bxs-shopping-bag-alt'></i>
-                <span class="text">Tools</span>
+        <li class="{% if request.path == '/college/analytics/' %}active{% endif %}">
+            <a href="/college/analytics/">
+                <i class='bx bxs-bar-chart-alt-2'></i>
+                <span class="text">Admission Analytics</span>
             </a>
         </li>
         <li class="{% if request.path == '/college/mail/' %}active{% endif %}">
             <a href="/college/mail/">
-                <i class='bx bxs-shopping-bag-alt'></i>
+                <i class='bx bxs-wrench'></i>
                 <span class="text">Tools</span>
             </a>
         </li>

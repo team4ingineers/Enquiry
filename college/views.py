@@ -527,3 +527,9 @@ def analytics(request):
         'funnel_data': funnel_data,
         
         })
+
+
+def onetone(request):
+    return render(request, 'onetoone.html')
+
+

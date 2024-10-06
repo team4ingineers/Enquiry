@@ -522,3 +522,6 @@ def college_tour(request):
 
 def compare(request):
     return render(request, 'compare.html')
+
+def iitgroup(request):
+    return render(request,'iitgroup.html')

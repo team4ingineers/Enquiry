@@ -1,47 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule a Meeting</title>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
-    <style>
-        form {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        #calendar {
-            margin-top: 20px;
-            max-width: 900px;
-            margin: auto;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>Update Meeting Status</h1>
+{% block title %}Dashboard{% endblock %}
 
-<form id="update-meeting-form" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Update Meeting Status</h1>
 
-    <button type="submit" class="btn btn-primary">Update Status</button>
-    <a href="{% url 'college_meetings' %}" class="btn btn-secondary">Cancel</a>
-</form>
+    <form id="update-meeting-form" method="post" class="custom-form">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-<!-- Calendar Container -->
-<div id="calendar"></div>
+        <button type="submit" class="btn btn-primary">Update Status</button>
+        <a href="{% url 'college_meetings' %}" class="btn btn-secondary">Cancel</a>
+    </form>
 
-<!-- Include FullCalendar JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.4/fullcalendar.min.js"></script>
+    <!-- Calendar Container -->
+    <div id="calendar" class="calendar"></div>
+</div>
 
+<!-- Include FullCalendar CSS and JavaScript -->
+<link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+
+<!-- FullCalendar Initialization Script -->
 <script>
     $(document).ready(function() {
         var meetings = [
@@ -67,5 +50,72 @@
     });
 </script>
 
-</body>
-</html>
+<!-- Inline CSS for Custom Styling -->
+<style>
+    /* Main container styling */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-top: 40px; /* Top margin to separate from other content */
+    }
+
+    /* Form styling */
+    .custom-form {
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+
+    /* Button styling */
+    .btn {
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: background-color 0.3s, transform 0.2s;
+        margin-top: 10px; /* Space between buttons */
+        text-align: center;
+        display: inline-block;
+    }
+
+    .btn-primary {
+        background-color: #68ff86; /* Green for update */
+        color: #333;
+    }
+
+    .btn-secondary {
+        background-color: #f0f0f0; /* Grey for cancel */
+        color: #333;
+        border: 1px solid #ddd;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px); /* Lift effect */
+    }
+
+    /* Calendar styling */
+    #calendar {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+
+        .btn {
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+    }
+</style>
+{% endblock %}

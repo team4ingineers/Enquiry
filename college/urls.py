@@ -21,4 +21,6 @@ urlpatterns = [
     path('analytics/',analytics, name='analytics'),
     path('scholarshipai/',scholarshipai,name ='scholarshipai'),
     path('start_meeting/', start_meeting, name='start_meeting'),
+    path('onetone/',onetone,name='onetone'),
+    
 ]

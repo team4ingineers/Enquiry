@@ -32,9 +32,12 @@
       <p><strong>Established Year:</strong> 1959</p>
       <p><strong>Type:</strong> Public Institute</p>
       <p><strong>NIRF Ranking:</strong> #1</p>
-      <a href="{{ college.official_website }}" target="_blank" class="btn-official">Visit Official Website</a>
-      <button class="btn-add">Add to List</button>
-      <a href="{% url 'college_tour' %}" class="btn-official">Virtual Tour</a> 
+      <div class="button-container">
+        <a href="{{ college.official_website }}" target="_blank" class="btn-official">Visit Official Website</a>
+        <button class="btn-add">Add to List</button>
+        <a href="{% url 'college_tour' %}" class="btn-official">Virtual Tour</a>
+        <a href="/student/iitgroup/" class="btn-official">IIT Madras Group Chat</a> <!-- New button added -->
+      </div>
     </div>
   </div>
 
@@ -130,10 +133,15 @@
     margin-bottom: 10px;
   }
 
-  .btn-official, .btn-add, .btn-tour {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 12px 24px;  /* Padding for buttons */
+  .button-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping to the next line */
+    gap: 10px; /* Space between buttons */
+    margin-top: 10px; /* Space above buttons */
+  }
+
+  .btn-official, .btn-add {
+    padding: 12px 24px; /* Padding for buttons */
     background-color: #007bff;
     color: white;
     text-decoration: none;
@@ -142,19 +150,17 @@
     cursor: pointer; /* Pointer cursor for button */
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+    flex: 1; /* Make buttons grow equally */
+    min-width: 200px; /* Minimum width to keep buttons same size */
   }
 
-  .btn-tour {
-    background-color: #28a745; /* Green color for the virtual tour button */
+  .btn-add {
+    background-color: #007bff; /* Different color for Add to List button */
   }
 
-  .btn-official:hover, .btn-add:hover, .btn-tour:hover {
-    background-color: #0056b3; /* Darker blue on hover for official and add buttons */
+  .btn-official:hover, .btn-add:hover {
+    background-color: #0056b3; /* Darker blue on hover */
     transform: translateY(-2px); /* Slightly raise button on hover */
-  }
-
-  .btn-tour:hover {
-    background-color: #218838; /* Darker green on hover for the virtual tour button */
   }
 
   .college-content section {
