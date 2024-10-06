@@ -69,6 +69,12 @@
                     <span class="text">Enquires</span>
                 </a>
             </li>
+            <li class="{% if request.path == '/student/health-scores/' %}active{% endif %}">
+                <a href="/student/health-scores/">
+                    <i class='bx bxs-doughnut-chart'></i>
+                    <span class="text">Ai Helper </span>
+                </a>
+            </li>
             <li class="{% if request.path == '/student/college-search/' %}active{% endif %}">
                 <a href="/student/college-search/">
                     <i class='bx bxs-doughnut-chart'></i>
