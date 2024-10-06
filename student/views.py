@@ -575,3 +575,5 @@ from django.shortcuts import render
 def college_tour(request):
     return render(request, 'college_tour.html')
 
+def compare(request):
+    return render(request, 'compare.html')

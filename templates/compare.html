@@ -1,0 +1,283 @@
+
+
+{% extends 'studentbase.html' %}
+
+{% block title %}compare{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Comparer</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+         
+        }
+
+        header {
+            background-color: #007BFF;
+            width: 100%;
+            border-radius: 20px;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .college-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: box-shadow 0.3s;
+        }
+
+        .college-card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .college-card h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        @media (min-width: 768px) {
+            .college-card {
+                flex: 1;
+                margin: 0 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            .container {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .comparison-table {
+                flex-basis: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .college-card h2 {
+                font-size: 1.2em;
+            }
+
+            .comparison-table th, .comparison-table td {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>College Comparer</h1>
+    </header>
+    <div class="container">
+        <div class="college-card">
+            <h2>Indian Institute of Technology Bombay (IIT Bombay)</h2>
+            <p><strong>Location:</strong> Powai, Mumbai</p>
+            <p><strong>Rating:</strong> 4.7/5</p>
+            <p><strong>Tuition Fees:</strong> ₹2,00,000/year</p>
+            <p><strong>Courses Offered:</strong> B.Tech, M.Tech, PhD, MBA</p>
+            <p><strong>Placement Record:</strong> 95%</p>
+            <button class="button" onclick="selectCollege('IIT Bombay')">Select for Comparison</button>
+        </div>
+        
+        <div class="college-card">
+            <h2>Veermata Jijabai Technological Institute (VJTI)</h2>
+            <p><strong>Location:</strong> Matunga, Mumbai</p>
+            <p><strong>Rating:</strong> 4.3/5</p>
+            <p><strong>Tuition Fees:</strong> ₹1,25,000/year</p>
+            <p><strong>Courses Offered:</strong> B.Tech, M.Tech, Diploma</p>
+            <p><strong>Placement Record:</strong> 85%</p>
+            <button class="button" onclick="selectCollege('VJTI')">Select for Comparison</button>
+        </div>
+
+        <div class="college-card">
+            <h2>Shivaji University</h2>
+            <p><strong>Location:</strong> Kolhapur, Maharashtra</p>
+            <p><strong>Rating:</strong> 4.0/5</p>
+            <p><strong>Tuition Fees:</strong> ₹70,000/year</p>
+            <p><strong>Courses Offered:</strong> B.Tech, MBA, MCA</p>
+            <p><strong>Placement Record:</strong> 80%</p>
+            <button class="button" onclick="selectCollege('Shivaji University')">Select for Comparison</button>
+        </div>
+
+        <div class="college-card">
+            <h2>Maharashtra Institute of Technology (MIT)</h2>
+            <p><strong>Location:</strong> Aurangabad, Maharashtra</p>
+            <p><strong>Rating:</strong> 4.1/5</p>
+            <p><strong>Tuition Fees:</strong> ₹1,00,000/year</p>
+            <p><strong>Courses Offered:</strong> B.Tech, M.Tech</p>
+            <p><strong>Placement Record:</strong> 90%</p>
+            <button class="button" onclick="selectCollege('MIT')">Select for Comparison</button>
+        </div>
+
+       
+
+        <div class="comparison-table">
+            <h2>Comparison Results</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>College 1</th>
+                        <th>College 2</th>
+                    </tr>
+                </thead>
+                <tbody id="comparison-results">
+                    <!-- Comparison results will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const collegeData = {
+            "IIT Bombay": {
+                location: "Powai, Mumbai",
+                rating: "4.7/5",
+                fees: "₹2,00,000/year",
+                courses: "B.Tech, M.Tech, PhD, MBA",
+                placement: "95%"
+            },
+            "VJTI": {
+                location: "Matunga, Mumbai",
+                rating: "4.3/5",
+                fees: "₹1,25,000/year",
+                courses: "B.Tech, M.Tech, Diploma",
+                placement: "85%"
+            },
+            "Shivaji University": {
+                location: "Kolhapur, Maharashtra",
+                rating: "4.0/5",
+                fees: "₹70,000/year",
+                courses: "B.Tech, MBA, MCA",
+                placement: "80%"
+            },
+            "MIT": {
+                location: "Aurangabad, Maharashtra",
+                rating: "4.1/5",
+                fees: "₹1,00,000/year",
+                courses: "B.Tech, M.Tech",
+                placement: "90%"
+            },
+          
+        };
+
+        let selectedColleges = [];
+
+        function selectCollege(collegeName) {
+            if (!selectedColleges.includes(collegeName)) {
+                selectedColleges.push(collegeName);
+                if (selectedColleges.length === 2) {
+                    compareColleges();
+                }
+            }
+        }
+
+        function compareColleges() {
+            const comparisonResults = document.getElementById('comparison-results');
+            comparisonResults.innerHTML = ""; // Clear previous results
+
+            const data1 = collegeData[selectedColleges[0]];
+            const data2 = collegeData[selectedColleges[1]];
+
+            comparisonResults.innerHTML += `
+                <tr>
+                    <td>Location</td>
+                    <td>${data1.location}</td>
+                    <td>${data2.location}</td>
+                </tr>
+                <tr>
+                    <td>Rating</td>
+                    <td>${data1.rating}</td>
+                    <td>${data2.rating}</td>
+                </tr>
+                <tr>
+                    <td>Tuition Fees</td>
+                    <td>${data1.fees}</td>
+                    <td>${data2.fees}</td>
+                </tr>
+                <tr>
+                    <td>Courses Offered</td>
+                    <td>${data1.courses}</td>
+                    <td>${data2.courses}</td>
+                </tr>
+                <tr>
+                    <td>Placement Record</td>
+                    <td>${data1.placement}</td>
+                    <td>${data2.placement}</td>
+                </tr>
+            `;
+
+            selectedColleges = []; // Reset selection after comparison
+        }
+    </script>
+</body>
+</html>
+
+
+
+{% endblock %}

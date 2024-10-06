@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Scoped styles for the college dashboard */
+        .dashboard-body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .dashboard-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .chart-item {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex: 1 1 calc(33% - 40px);
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .chart-title {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .chart-canvas {
+            width: 100% !important;
+            height: 400px !important;
+        }
+
+        /* Media query for responsiveness */
+        @media (max-width: 900px) {
+            .chart-item {
+                flex: 1 1 calc(50% - 40px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .chart-item {
+                flex: 1 1 100%;
+            }
+
+            .dashboard-title {
+                font-size: 24px;
+            }
+
+            .chart-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <h1 class="dashboard-title">College Enquiry Metrics</h1>
+    
+    <div class="charts-container">
+        <div class="chart-item">
+            <h3 class="chart-title">Response Time to Inquiries</h3>
+            <canvas id="responseTimeChart" class="chart-canvas"></canvas>
+        </div>
+
+        <div class="chart-item">
+            <h3 class="chart-title">Inquiry Categories Breakdown</h3>
+            <canvas id="inquiryBreakdownChart" class="chart-canvas"></canvas>
+        </div>
+
+        <div class="chart-item">
+            <h3 class="chart-title">Enrollment Funnel</h3>
+            <canvas id="funnelChart" class="chart-canvas"></canvas>
+        </div>
+
+        <div class="chart-item">
+            <h3 class="chart-title">Student Visits to College Website</h3>
+            <canvas id="studentVisitsChart" class="chart-canvas"></canvas>
+        </div>
+
+        <div class="chart-item">
+            <h3 class="chart-title">Inquiries per College</h3>
+            <canvas id="inquiriesChart" class="chart-canvas"></canvas>
+        </div>
+
+        <div class="chart-item">
+            <h3 class="chart-title">Conversions after Inquiries</h3>
+            <canvas id="conversionsChart" class="chart-canvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const collegeNames = {{ college_names|safe }};
+        const studentVisits = {{ student_visits|safe }};
+        const inquiries = {{ inquiries|safe }};
+        const conversions = {{ conversions|safe }};
+        const responseTime = {{ response_time|safe }};
+        const additionalResponseTimes1 = {{ additional_response_times_1|safe }};
+        const additionalResponseTimes2 = {{ additional_response_times_2|safe }};
+        const inquiryCategories = {{ inquiry_categories|safe }};
+        const inquiryBreakdown = {{ inquiry_breakdown|safe }};
+        const funnelData = {{ funnel_data|safe }};
+
+        function createChart(ctx, type, labels, data, backgroundColors, borderColor) {
+            return new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Metrics',
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.label}: ${context.raw}`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        const randomColor = () => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`;
+
+        createChart(
+            document.getElementById('studentVisitsChart'), 
+            'bar', 
+            collegeNames, 
+            studentVisits, 
+            collegeNames.map(() => randomColor()), 
+            'rgba(75, 192, 192, 1)'
+        );
+
+        createChart(
+            document.getElementById('inquiriesChart'), 
+            'bar', 
+            collegeNames, 
+            inquiries, 
+            collegeNames.map(() => randomColor()), 
+            'rgba(255, 159, 64, 1)'
+        );
+
+        createChart(
+            document.getElementById('conversionsChart'), 
+            'pie', 
+            collegeNames, 
+            conversions, 
+            collegeNames.map(() => randomColor()), 
+            'rgba(153, 102, 255, 1)'
+        );
+
+        new Chart(document.getElementById('responseTimeChart'), {
+            type: 'line',
+            data: {
+                labels: collegeNames,
+                datasets: [
+                    {
+                        label: 'Original Response Time (hours)',
+                        data: responseTime,
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                    },
+                    {
+                        label: 'Additional Response Time 1 (hours)',
+                        data: additionalResponseTimes1,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                    },
+                    {
+                        label: 'Additional Response Time 2 (hours)',
+                        data: additionalResponseTimes2,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => `${context.dataset.label}: ${context.raw}`
+                        }
+                    }
+                }
+            }
+        });
+
+        createChart(
+            document.getElementById('inquiryBreakdownChart'), 
+            'doughnut', 
+            inquiryCategories, 
+            inquiryBreakdown, 
+            inquiryCategories.map(() => randomColor()), 
+            'rgba(255, 206, 86, 1)'
+        );
+
+        new Chart(document.getElementById('funnelChart'), {
+            type: 'bar',
+            data: {
+                labels: collegeNames,
+                datasets: [
+                    {
+                        label: 'Visits',
+                        data: funnelData.visits,
+                        backgroundColor: randomColor(),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    }, 
+                    {
+                        label: 'Inquiries',
+                        data: funnelData.inquiries,
+                        backgroundColor: randomColor(),
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1,
+                    }, 
+                    {
+                        label: 'Enrollments',
+                        data: funnelData.enrollments,
+                        backgroundColor: randomColor(),
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => `${context.dataset.label}: ${context.raw}`
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,1 +1,44 @@
+
+
 {% extends 'studentbase.html' %}
+
+{% block title %}tools{% endblock %}
+
+{% block content %}
+
+
+
+        <div class="head-title">
+            <div class="left">
+                <h1>Dashboard</h1>
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li>
+                        <a class="active" href="#">Tools</a>
+                    </li>
+                </ul>
+            </div>
+           
+        </div>
+
+        <ul class="box-info">
+            <li> <a href="/student/student/compare/">
+                <i class='bx bxs-calendar-check'></i>
+                <span class="text"></a>
+                 
+                    <p>Compare College</p>
+                </span>
+            </li>
+            <li>
+                <a href="/student/student/googledrive/">
+                <i class='bx bxs-calendar-check'></i>
+                <span class="text"></a>
+                    <p>Documents drive</p>
+                </span>
+            </li>
+            
+        </ul>
+{% endblock %}

@@ -416,3 +416,37 @@ def format_response(response_text):
 
     # Join the formatted lines back into a string
     return "\n".join(formatted_lines)
+
+
+from django.shortcuts import render
+
+def analytics(request):
+    # Example data for demonstration. Replace with your actual data retrieval logic.
+    college_names = ['College A', 'College B', 'College C']
+    student_visits = [120, 150, 90]
+    inquiries = [60, 80, 50]
+    conversions = [30, 40, 20]
+    response_time = [20, 35, 25]  # Original response times for existing lines
+    additional_response_times_1 = [25, 30, 15]  # New data for line 1
+    additional_response_times_2 = [20, 40, 30]  # New data for line 2
+    inquiry_categories = ['Admissions', 'Financial Aid', 'Course-Related']
+    inquiry_breakdown = [40, 30, 30]
+    funnel_data = {
+        'visits': [100, 120, 80],
+        'inquiries': [50, 70, 40],
+        'enrollments': [20, 30, 15],
+    }
+
+    return render(request, 'analytics.html', {
+        'college_names': college_names,
+        'student_visits': student_visits,
+        'inquiries': inquiries,
+        'conversions': conversions,
+        'response_time': response_time,
+        'additional_response_times_1': additional_response_times_1,
+        'additional_response_times_2': additional_response_times_2,
+        'inquiry_categories': inquiry_categories,
+        'inquiry_breakdown': inquiry_breakdown,
+        'funnel_data': funnel_data,
+        
+        })
