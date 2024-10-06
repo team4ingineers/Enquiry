@@ -23,7 +23,6 @@ class HealthScoreAdmin(admin.ModelAdmin):
     list_filter = ('health_score',)
     ordering = ('-health_score',)
 
-admin.site.register(CollegeHealthScore)
 admin.site.register(StudentFeedback)
 
 from django.contrib import admin
